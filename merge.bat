@@ -1,0 +1,1 @@
+packages\ILRepack.1.17\tools\ILRepack.exe /out:src/TRock.Music.Grooveshark/bin/Release/TRock.Music.Grooveshark.Merged.dll src/TRock.Music.Grooveshark/bin/Release/TRock.Music.Grooveshark.dll src/TRock.Music.Grooveshark/bin/Release/SciLorsGroovesharkAPI.dll "src/TRock.Music.Grooveshark/bin/Release/SciLors UpdateCheck.dll"

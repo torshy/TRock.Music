@@ -1,0 +1,23 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<GrooveFix version="20120320">
+  <htmlshark>
+    <GrooveClient>htmlshark</GrooveClient>
+    <GrooveClientRevision>20120312</GrooveClientRevision>
+    <GrooveStaticRandomizer>:breakfastBurritos:</GrooveStaticRandomizer>
+  </htmlshark>
+  <jsqueue>
+    <GrooveClient>jsqueue</GrooveClient>
+    <GrooveClientRevision>20120312.02</GrooveClientRevision>
+    <GrooveStaticRandomizer>:closeButNoCigar:</GrooveStaticRandomizer>
+  </jsqueue>
+  <mobileshark>
+    <GrooveClient>mobileshark</GrooveClient>
+    <GrooveClientRevision>20120112</GrooveClientRevision>
+    <GrooveStaticRandomizer>:boomGoesTheDolphin:</GrooveStaticRandomizer>
+  </mobileshark>
+  <mobileshark>
+    <GrooveClient>jsplayer</GrooveClient>
+    <GrooveClientRevision>20120124.01</GrooveClientRevision>
+    <GrooveStaticRandomizer>:needsMoarFoodForSharks:</GrooveStaticRandomizer>
+  </mobileshark>
+</GrooveFix>

@@ -1,0 +1,60 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2012
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TRock.Music", "src\TRock.Music\TRock.Music.csproj", "{E4459604-7CCC-4F65-A533-37A727DC7F10}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TRock.Music.Aggregate", "src\TRock.Music.Aggregate\TRock.Music.Aggregate.csproj", "{01BBA74A-5405-4722-8E6C-435A3C37EDB4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TRock.Music.Grooveshark", "src\TRock.Music.Grooveshark\TRock.Music.Grooveshark.csproj", "{2DCB6DE5-F15C-4382-9B97-252C26D1F027}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TRock.Music.Spotify", "src\TRock.Music.Spotify\TRock.Music.Spotify.csproj", "{D5E03842-FC10-4307-93B0-7EB621E2D188}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TRock.Music.Tests", "src\TRock.Music.Tests\TRock.Music.Tests.csproj", "{E0AF1BCD-50F7-4A2C-AB85-CBB7A2FC3EC5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TRock.Music.Torshify", "src\TRock.Music.Torshify\TRock.Music.Torshify.csproj", "{FC2702F2-89D3-45AF-A427-CCC8D6F3361D}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{3E82FBC9-4A42-46A5-8908-3006AB0D2784}"
+	ProjectSection(SolutionItems) = preProject
+		src\CommonAssemblyInfo.cs = src\CommonAssemblyInfo.cs
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{F440C010-ADF1-4AE5-AC77-E9C5E6807D13}"
+	ProjectSection(SolutionItems) = preProject
+		.nuget\packages.config = .nuget\packages.config
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{E4459604-7CCC-4F65-A533-37A727DC7F10}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E4459604-7CCC-4F65-A533-37A727DC7F10}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E4459604-7CCC-4F65-A533-37A727DC7F10}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E4459604-7CCC-4F65-A533-37A727DC7F10}.Release|Any CPU.Build.0 = Release|Any CPU
+		{01BBA74A-5405-4722-8E6C-435A3C37EDB4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{01BBA74A-5405-4722-8E6C-435A3C37EDB4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{01BBA74A-5405-4722-8E6C-435A3C37EDB4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{01BBA74A-5405-4722-8E6C-435A3C37EDB4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2DCB6DE5-F15C-4382-9B97-252C26D1F027}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2DCB6DE5-F15C-4382-9B97-252C26D1F027}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2DCB6DE5-F15C-4382-9B97-252C26D1F027}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2DCB6DE5-F15C-4382-9B97-252C26D1F027}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D5E03842-FC10-4307-93B0-7EB621E2D188}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D5E03842-FC10-4307-93B0-7EB621E2D188}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D5E03842-FC10-4307-93B0-7EB621E2D188}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D5E03842-FC10-4307-93B0-7EB621E2D188}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E0AF1BCD-50F7-4A2C-AB85-CBB7A2FC3EC5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E0AF1BCD-50F7-4A2C-AB85-CBB7A2FC3EC5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E0AF1BCD-50F7-4A2C-AB85-CBB7A2FC3EC5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E0AF1BCD-50F7-4A2C-AB85-CBB7A2FC3EC5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FC2702F2-89D3-45AF-A427-CCC8D6F3361D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FC2702F2-89D3-45AF-A427-CCC8D6F3361D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FC2702F2-89D3-45AF-A427-CCC8D6F3361D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FC2702F2-89D3-45AF-A427-CCC8D6F3361D}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
