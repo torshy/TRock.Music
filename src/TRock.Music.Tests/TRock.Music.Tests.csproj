@@ -60,10 +60,6 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\TRock.Music.Aggregate\TRock.Music.Aggregate.csproj">
-      <Project>{01BBA74A-5405-4722-8E6C-435A3C37EDB4}</Project>
-      <Name>TRock.Music.Aggregate</Name>
-    </ProjectReference>
     <ProjectReference Include="..\TRock.Music.Grooveshark\TRock.Music.Grooveshark.csproj">
       <Project>{2DCB6DE5-F15C-4382-9B97-252C26D1F027}</Project>
       <Name>TRock.Music.Grooveshark</Name>

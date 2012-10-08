@@ -1,11 +1,10 @@
-﻿using System;
-using System.Threading;
+﻿using System.Threading;
 using System.Threading.Tasks;
-using TRock.Music.Aggregate;
+
 using TRock.Music.Grooveshark;
 using TRock.Music.Spotify;
+
 using Xunit;
-using System.Linq;
 
 namespace TRock.Music.Tests
 {

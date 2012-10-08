@@ -2,14 +2,12 @@ using System.Threading;
 
 using NSubstitute;
 
-using TRock.Music.Aggregate;
 using TRock.Music.Grooveshark;
 using TRock.Music.Spotify;
 
 using Xunit;
 
 using System.Linq;
-using TRock.Music.Reactive;
 
 namespace TRock.Music.Tests
 {

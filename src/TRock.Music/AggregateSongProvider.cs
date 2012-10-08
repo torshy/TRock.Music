@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace TRock.Music.Aggregate
+namespace TRock.Music
 {
     public class AggregateSongProvider : ISongProvider
     {
@@ -49,7 +49,7 @@ namespace TRock.Music.Aggregate
 
         public Task<IEnumerable<Song>> GetSongs(string query, CancellationToken cancellationToken)
         {
-            return Task.Run(() =>
+            return Task.Factory.StartNew(() =>
             {
                 var songs = new ConcurrentBag<Song>();
 
@@ -63,30 +63,31 @@ namespace TRock.Music.Aggregate
                     }
                 });
 
-                return (IEnumerable<Song>) songs.ToArray();
+                return (IEnumerable<Song>)songs.ToArray();
             });
         }
 
-        public async Task<IEnumerable<Album>> GetAlbums(string artistId, CancellationToken cancellationToken)
+        public Task<IEnumerable<Album>> GetAlbums(string artistId, CancellationToken cancellationToken)
         {
-            var albums = new ConcurrentBag<Album>();
+            return Task.Factory.ContinueWhenAll(Providers.Select(p => p.GetAlbums(artistId, cancellationToken)).ToArray(), tasks =>
+            {
+                var albums = new ConcurrentBag<Album>();
 
-            await Task
-                .WhenAll(Providers.Select(provider => provider.GetAlbums(artistId, cancellationToken)
-                .ContinueWith(t =>
+                foreach (Task<IEnumerable<Album>> task in tasks)
                 {
-                    foreach (var item in t.Result)
+                    foreach (Album album in task.Result)
                     {
-                        albums.Add(item);
+                        albums.Add(album);
                     }
-                })));
+                }
 
-            return albums.ToArray();
+                return (IEnumerable<Album>)albums;
+            });
         }
 
         public Task<ArtistAlbum> GetAlbum(string albumId, CancellationToken cancellationToken)
         {
-            return Task.Run(() =>
+            return Task.Factory.StartNew(() =>
             {
                 ArtistAlbum result = null;
 

@@ -3,8 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2012
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TRock.Music", "src\TRock.Music\TRock.Music.csproj", "{E4459604-7CCC-4F65-A533-37A727DC7F10}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TRock.Music.Aggregate", "src\TRock.Music.Aggregate\TRock.Music.Aggregate.csproj", "{01BBA74A-5405-4722-8E6C-435A3C37EDB4}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TRock.Music.Grooveshark", "src\TRock.Music.Grooveshark\TRock.Music.Grooveshark.csproj", "{2DCB6DE5-F15C-4382-9B97-252C26D1F027}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TRock.Music.Spotify", "src\TRock.Music.Spotify\TRock.Music.Spotify.csproj", "{D5E03842-FC10-4307-93B0-7EB621E2D188}"
@@ -35,10 +33,6 @@ Global
 		{E4459604-7CCC-4F65-A533-37A727DC7F10}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E4459604-7CCC-4F65-A533-37A727DC7F10}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E4459604-7CCC-4F65-A533-37A727DC7F10}.Release|Any CPU.Build.0 = Release|Any CPU
-		{01BBA74A-5405-4722-8E6C-435A3C37EDB4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{01BBA74A-5405-4722-8E6C-435A3C37EDB4}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{01BBA74A-5405-4722-8E6C-435A3C37EDB4}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{01BBA74A-5405-4722-8E6C-435A3C37EDB4}.Release|Any CPU.Build.0 = Release|Any CPU
 		{2DCB6DE5-F15C-4382-9B97-252C26D1F027}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{2DCB6DE5-F15C-4382-9B97-252C26D1F027}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2DCB6DE5-F15C-4382-9B97-252C26D1F027}.Release|Any CPU.ActiveCfg = Release|Any CPU

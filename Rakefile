@@ -30,10 +30,10 @@ end
 output :output => :merge do |out|
   out.from '.'
   out.to 'out'
-  out.file 'src\TRock.Music\bin\Release\TRock.Music.dll', :as=>'TRock.Music.dll'
-  out.file 'src\TRock.Music.Aggregate\bin\Release\TRock.Music.Aggregate.dll', :as=>'TRock.Music.Aggregate.dll'
+  out.file 'src\TRock.Music\bin\Release\TRock.Music.dll', :as=>'TRock.Music.dll'  
   out.file 'src\TRock.Music.Grooveshark\bin\Release\TRock.Music.Grooveshark.Merged.dll', :as=>'TRock.Music.Grooveshark.dll'
   out.file 'src\TRock.Music.Spotify\bin\Release\TRock.Music.Spotify.dll', :as=>'TRock.Music.Spotify.dll'
   out.file 'src\TRock.Music.Torshify\bin\Release\TRock.Music.Torshify.dll', :as=>'TRock.Music.Torshify.dll'  
+  out.file 'src\TRock.Music.Reactive\bin\Release\TRock.Music.Reactive.dll', :as=>'TRock.Music.Reactive.dll' 
 end
 

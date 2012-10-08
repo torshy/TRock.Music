@@ -4,13 +4,12 @@ using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.Linq;
 
-namespace TRock.Music.Aggregate
+namespace TRock.Music
 {
     public class AggregateSongPlayer : ISongPlayer
     {
         #region Fields
 
-        private readonly Dictionary<ISongPlayer, IEnumerable<IDisposable>> _eventHooks;
         private readonly object _lockObject = new object();
 
         private ISongPlayer _currentSongPlayer;
@@ -34,7 +33,6 @@ namespace TRock.Music.Aggregate
         public AggregateSongPlayer(IEnumerable<ISongPlayer> players)
         {
             _volume = 0.5f;
-            _eventHooks = new Dictionary<ISongPlayer, IEnumerable<IDisposable>>();
 
             Players = new ObservableCollection<ISongPlayer>(players);
 
