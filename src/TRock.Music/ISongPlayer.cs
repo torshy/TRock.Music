@@ -2,17 +2,47 @@ using System;
 
 namespace TRock.Music
 {
-    public interface ISongPlayer : ISongPlayerReactive
+    public interface ISongPlayer
     {
+        #region Events
+
+        event EventHandler<ValueChangedEventArgs<bool>> IsMutedChanged;
+
+        event EventHandler<ValueChangedEventArgs<bool>> IsPlayingChanged;
+
+        event EventHandler<ValueChangedEventArgs<float>> VolumeChanged;
+
+        event EventHandler<ValueChangedEventArgs<Song>> CurrentSongChanged;
+
+        event EventHandler<SongEventArgs> CurrentSongCompleted;
+
+        event EventHandler<ValueProgressEventArgs<int>> Buffering;
+
+        event EventHandler<ValueProgressEventArgs<int>> Progress;
+
+        #endregion Events
+
         #region Properties
 
-        bool IsMuted { get; set; }
+        bool IsMuted
+        {
+            get; set;
+        }
 
-        bool IsPlaying { get; set; }
+        bool IsPlaying
+        {
+            get; set;
+        }
 
-        float Volume { get; set; }
+        float Volume
+        {
+            get; set;
+        }
 
-        Song CurrentSong { get; }
+        Song CurrentSong
+        {
+            get;
+        }
 
         #endregion Properties
 
@@ -29,39 +59,5 @@ namespace TRock.Music
         void Pause();
 
         #endregion Methods
-    }
-
-    public interface ISongPlayerEvents
-    {
-        event EventHandler<ValueChangedEventArgs<bool>> IsMutedChanged;
-
-        event EventHandler<ValueChangedEventArgs<bool>> IsPlayingChanged;
-
-        event EventHandler<ValueChangedEventArgs<float>> VolumeChanged;
-
-        event EventHandler<ValueChangedEventArgs<Song>> CurrentSongChanged;
-
-        event EventHandler<SongEventArgs> CurrentSongCompleted;
-
-        event EventHandler<ValueProgressEventArgs<int>> Buffering;
-
-        event EventHandler<ValueProgressEventArgs<int>> Progress;
-    }
-
-    public interface ISongPlayerReactive
-    {
-        IObservable<ValueChange<bool>> IsMutedChanged { get; }
-
-        IObservable<ValueChange<bool>> IsPlayingChanged { get; }
-
-        IObservable<ValueChange<float>> VolumeChanged { get; }
-
-        IObservable<ValueChange<Song>> CurrentSongChanged { get; }
-
-        IObservable<Song> CurrentSongCompleted { get; }
-
-        IObservable<ValueProgress<int>> Buffering { get; }
-
-        IObservable<ValueProgress<int>> Progress { get; }
     }
 }

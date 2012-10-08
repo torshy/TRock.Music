@@ -2,9 +2,6 @@ using System.Threading;
 
 using NSubstitute;
 
-using System;
-using System.Reactive.Subjects;
-
 using TRock.Music.Aggregate;
 using TRock.Music.Grooveshark;
 using TRock.Music.Spotify;
@@ -12,7 +9,7 @@ using TRock.Music.Spotify;
 using Xunit;
 
 using System.Linq;
-using System.Reactive.Linq;
+using TRock.Music.Reactive;
 
 namespace TRock.Music.Tests
 {
@@ -32,22 +29,17 @@ namespace TRock.Music.Tests
                 Provider = "SubProvider#1"
             };
 
-            var buffering = new Subject<ValueProgress<int>>();
-            subPlayer1.Buffering.Returns(buffering);
             subPlayer1.CanPlay(Arg.Is(song)).Returns(true);
 
             var player = new AggregateSongPlayer();
             player.Players.Add(subPlayer1);
             player.Players.Add(subPlayer2);
             player.Players.Add(subPlayer3);
-
+            
             var receivedBuffering = false;
-            player.Buffering.Subscribe(item =>
-            {
-                receivedBuffering = true;
-            });
+            player.Buffering += (sender, args) => receivedBuffering = true;
 
-            buffering.OnNext(new ValueProgress<int>());
+            subPlayer1.Buffering += Raise.EventWith(player, new ValueProgressEventArgs<int>(1, 100));
 
             Assert.True(receivedBuffering);
             Assert.True(player.CanPlay(song));
@@ -70,12 +62,6 @@ namespace TRock.Music.Tests
 
             if (player.CanPlay(song))
             {
-                player.Progress.Buffer(TimeSpan.FromSeconds(5)).Subscribe(p =>
-                {
-                    player.Stop();
-                    Assert.NotEmpty(p);
-                });
-
                 player.Start(song);
             }
         }

@@ -1,9 +1,6 @@
 using System;
 using System.Diagnostics;
 using System.IO;
-using System.Reactive;
-using System.Reactive.Concurrency;
-using System.Reactive.Subjects;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -17,15 +14,8 @@ namespace TRock.Music.Grooveshark
     {
         #region Fields
 
-        private readonly Subject<ValueProgress<int>> _buffering;
-        private readonly Subject<ValueChange<Song>> _currentSongChanged;
-        private readonly Subject<Song> _currentSongCompleted;
         private readonly IGroovesharkClient _groove;
-        private readonly Subject<ValueChange<bool>> _isMutedChanged;
-        private readonly Subject<ValueChange<bool>> _isPlayingChanged;
         private readonly object _lockObject = new object();
-        private readonly Subject<ValueProgress<int>> _progress;
-        private readonly Subject<ValueChange<float>> _volumeChanged;
 
         private bool _bufferingComplete;
         private SongData _currentSong;
@@ -41,13 +31,6 @@ namespace TRock.Music.Grooveshark
         public GroovesharkSongPlayer(IGroovesharkClient groove)
         {
             _groove = groove;
-            _isMutedChanged = new Subject<ValueChange<bool>>();
-            _isPlayingChanged = new Subject<ValueChange<bool>>();
-            _volumeChanged = new Subject<ValueChange<float>>();
-            _currentSongChanged = new Subject<ValueChange<Song>>();
-            _currentSongCompleted = new Subject<Song>();
-            _buffering = new Subject<ValueProgress<int>>();
-            _progress = new Subject<ValueProgress<int>>();
             _volume = 0.5f;
         }
 
@@ -65,42 +48,25 @@ namespace TRock.Music.Grooveshark
 
         #endregion Enumerations
 
+        #region Events
+
+        public event EventHandler<ValueProgressEventArgs<int>> Buffering;
+
+        public event EventHandler<ValueChangedEventArgs<Song>> CurrentSongChanged;
+
+        public event EventHandler<SongEventArgs> CurrentSongCompleted;
+
+        public event EventHandler<ValueChangedEventArgs<bool>> IsMutedChanged;
+
+        public event EventHandler<ValueChangedEventArgs<bool>> IsPlayingChanged;
+
+        public event EventHandler<ValueProgressEventArgs<int>> Progress;
+
+        public event EventHandler<ValueChangedEventArgs<float>> VolumeChanged;
+
+        #endregion Events
+
         #region Properties
-
-        public IObservable<ValueChange<bool>> IsMutedChanged
-        {
-            get { return _isMutedChanged; }
-        }
-
-        public IObservable<ValueChange<bool>> IsPlayingChanged
-        {
-            get { return _isPlayingChanged; }
-        }
-
-        public IObservable<ValueChange<float>> VolumeChanged
-        {
-            get { return _volumeChanged; }
-        }
-
-        public IObservable<ValueChange<Song>> CurrentSongChanged
-        {
-            get { return _currentSongChanged; }
-        }
-
-        public IObservable<Song> CurrentSongCompleted
-        {
-            get { return _currentSongCompleted; }
-        }
-
-        public IObservable<ValueProgress<int>> Buffering
-        {
-            get { return _buffering; }
-        }
-
-        public IObservable<ValueProgress<int>> Progress
-        {
-            get { return _progress; }
-        }
 
         public bool IsMuted
         {
@@ -119,13 +85,7 @@ namespace TRock.Music.Grooveshark
                         _currentSong.VolumeProvider.Volume = Volume;
                     }
 
-                    _isMutedChanged
-                        .NotifyOn(Scheduler.Default)
-                        .OnNext(new ValueChange<bool>
-                        {
-                            NewValue = _isMuted,
-                            OldValue = !_isMuted
-                        });
+                    OnIsMutedChanged(new ValueChangedEventArgs<bool>(!_isMuted, _isMuted));
                 }
             }
         }
@@ -171,13 +131,8 @@ namespace TRock.Music.Grooveshark
 
                 var oldVolume = _volume;
                 _volume = value;
-                _volumeChanged
-                    .NotifyOn(Scheduler.Default)
-                    .OnNext(new ValueChange<float>
-                    {
-                        OldValue = oldVolume,
-                        NewValue = _volume
-                    });
+
+                OnVolumeChanged(new ValueChangedEventArgs<float>(oldVolume, _volume));
             }
         }
 
@@ -258,9 +213,7 @@ namespace TRock.Music.Grooveshark
                 };
             }
 
-            _currentSongChanged
-                .NotifyOn(Scheduler.Default)
-                .OnNext(new ValueChange<Song> { OldValue = oldSong, NewValue = _currentSong.Song });
+            OnCurrentSongChanged(new ValueChangedEventArgs<Song>(oldSong, _currentSong.Song));
 
             _currentSong.BufferTask =
                     Task.Factory
@@ -295,8 +248,9 @@ namespace TRock.Music.Grooveshark
                         _currentSong = null;
                         _playerState = PlayerState.Stopped;
                         _isPlaying = false;
-                        _isPlayingChanged.OnNext(new ValueChange<bool> { NewValue = false, OldValue = true });
-                        _currentSongCompleted.OnNext(((SongData)task.AsyncState).Song);
+
+                        OnIsPlayingChanged(new ValueChangedEventArgs<bool>(false, true));
+                        OnCurrentSongCompleted(new SongEventArgs(((SongData)task.AsyncState).Song));
                     });
         }
 
@@ -309,9 +263,8 @@ namespace TRock.Music.Grooveshark
                     _playerState = PlayerState.Playing;
                     _currentSong.WaveOut.Play();
                     _isPlaying = true;
-                    _isPlayingChanged
-                        .NotifyOn(Scheduler.Default)
-                        .OnNext(new ValueChange<bool> { OldValue = false, NewValue = true });
+
+                    OnIsPlayingChanged(new ValueChangedEventArgs<bool>(false, true));
                 }
             }
         }
@@ -331,21 +284,58 @@ namespace TRock.Music.Grooveshark
         {
             if (_playerState == PlayerState.Playing)
             {
-                
+
                 if (_currentSong != null && _currentSong.WaveOut != null)
                 {
                     _playerState = PlayerState.Paused;
                     _currentSong.WaveOut.Pause();
                     _isPlaying = false;
-                    _isPlayingChanged
-                        .NotifyOn(Scheduler.Default)
-                        .OnNext(new ValueChange<bool>
-                        {
-                            NewValue = false,
-                            OldValue = true
-                        });
+
+                    OnIsPlayingChanged(new ValueChangedEventArgs<bool>(true, false));
                 }
             }
+        }
+
+        protected void OnIsMutedChanged(ValueChangedEventArgs<bool> e)
+        {
+            EventHandler<ValueChangedEventArgs<bool>> handler = IsMutedChanged;
+            if (handler != null) handler(this, e);
+        }
+
+        protected void OnIsPlayingChanged(ValueChangedEventArgs<bool> e)
+        {
+            EventHandler<ValueChangedEventArgs<bool>> handler = IsPlayingChanged;
+            if (handler != null) handler(this, e);
+        }
+
+        protected void OnVolumeChanged(ValueChangedEventArgs<float> e)
+        {
+            EventHandler<ValueChangedEventArgs<float>> handler = VolumeChanged;
+            if (handler != null) handler(this, e);
+        }
+
+        protected void OnCurrentSongChanged(ValueChangedEventArgs<Song> e)
+        {
+            EventHandler<ValueChangedEventArgs<Song>> handler = CurrentSongChanged;
+            if (handler != null) handler(this, e);
+        }
+
+        protected void OnCurrentSongCompleted(SongEventArgs e)
+        {
+            EventHandler<SongEventArgs> handler = CurrentSongCompleted;
+            if (handler != null) handler(this, e);
+        }
+
+        protected void OnBuffering(ValueProgressEventArgs<int> e)
+        {
+            EventHandler<ValueProgressEventArgs<int>> handler = Buffering;
+            if (handler != null) handler(this, e);
+        }
+
+        protected void OnProgress(ValueProgressEventArgs<int> e)
+        {
+            EventHandler<ValueProgressEventArgs<int>> handler = Progress;
+            if (handler != null) handler(this, e);
         }
 
         private void BufferStream(SongData songData)
@@ -381,7 +371,7 @@ namespace TRock.Music.Grooveshark
 
                         if (progress % 5 == 0)
                         {
-                            _buffering.OnNext(new ValueProgress<int> { Current = progress, Total = 100 });
+                            OnBuffering(new ValueProgressEventArgs<int>(progress, 100));
                         }
 
                         if (frame == null)
@@ -519,11 +509,7 @@ namespace TRock.Music.Grooveshark
 
                     if (currentTime % 1000 == 0)
                     {
-                        _progress.OnNext(new ValueProgress<int>
-                        {
-                            Current = currentTime / 1000,
-                            Total = (int)songData.Stream.Value.Item3.TotalSeconds
-                        });
+                        OnProgress(new ValueProgressEventArgs<int>(currentTime / 1000, (int)songData.Stream.Value.Item3.TotalSeconds));
                     }
                 }
 
@@ -598,9 +584,10 @@ namespace TRock.Music.Grooveshark
                 get;
                 set;
             }
+
             public WaveOutEvent WaveOut
             {
-                get; 
+                get;
                 set;
             }
 

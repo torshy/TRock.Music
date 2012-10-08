@@ -1,4 +1,4 @@
-namespace TRock.Music
+namespace TRock.Music.Reactive
 {
     public class ValueChange<T>
     {

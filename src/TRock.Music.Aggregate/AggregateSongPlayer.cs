@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
-using System.Reactive.Subjects;
 using System.Linq;
 
 namespace TRock.Music.Aggregate
@@ -11,18 +10,10 @@ namespace TRock.Music.Aggregate
     {
         #region Fields
 
-        private ISongPlayer _currentSongPlayer;
-
-        private readonly Subject<ValueProgress<int>> _buffering;
-        private readonly Subject<ValueChange<Song>> _currentSongChanged;
-        private readonly Subject<Song> _currentSongCompleted;
-        private readonly Subject<ValueChange<bool>> _isMutedChanged;
-        private readonly Subject<ValueChange<bool>> _isPlayingChanged;
-        private readonly Subject<ValueProgress<int>> _progress;
-        private readonly Subject<ValueChange<float>> _volumeChanged;
         private readonly Dictionary<ISongPlayer, IEnumerable<IDisposable>> _eventHooks;
         private readonly object _lockObject = new object();
 
+        private ISongPlayer _currentSongPlayer;
         private bool _isMuted;
         private float _volume;
 
@@ -33,26 +24,17 @@ namespace TRock.Music.Aggregate
         public AggregateSongPlayer()
             : this(new ISongPlayer[0])
         {
-
         }
 
         public AggregateSongPlayer(params ISongPlayer[] players)
             : this((IEnumerable<ISongPlayer>)players)
         {
-            
         }
 
         public AggregateSongPlayer(IEnumerable<ISongPlayer> players)
         {
             _volume = 0.5f;
             _eventHooks = new Dictionary<ISongPlayer, IEnumerable<IDisposable>>();
-            _isMutedChanged = new Subject<ValueChange<bool>>();
-            _isPlayingChanged = new Subject<ValueChange<bool>>();
-            _volumeChanged = new Subject<ValueChange<float>>();
-            _currentSongChanged = new Subject<ValueChange<Song>>();
-            _currentSongCompleted = new Subject<Song>();
-            _buffering = new Subject<ValueProgress<int>>();
-            _progress = new Subject<ValueProgress<int>>();
 
             Players = new ObservableCollection<ISongPlayer>(players);
 
@@ -73,42 +55,25 @@ namespace TRock.Music.Aggregate
 
         #endregion Constructors
 
+        #region Events
+
+        public event EventHandler<ValueProgressEventArgs<int>> Buffering;
+
+        public event EventHandler<ValueChangedEventArgs<Song>> CurrentSongChanged;
+
+        public event EventHandler<SongEventArgs> CurrentSongCompleted;
+
+        public event EventHandler<ValueChangedEventArgs<bool>> IsMutedChanged;
+
+        public event EventHandler<ValueChangedEventArgs<bool>> IsPlayingChanged;
+
+        public event EventHandler<ValueProgressEventArgs<int>> Progress;
+
+        public event EventHandler<ValueChangedEventArgs<float>> VolumeChanged;
+
+        #endregion Events
+
         #region Properties
-
-        public IObservable<ValueChange<bool>> IsMutedChanged
-        {
-            get { return _isMutedChanged; }
-        }
-
-        public IObservable<ValueChange<bool>> IsPlayingChanged
-        {
-            get { return _isPlayingChanged; }
-        }
-
-        public IObservable<ValueChange<float>> VolumeChanged
-        {
-            get { return _volumeChanged; }
-        }
-
-        public IObservable<ValueChange<Song>> CurrentSongChanged
-        {
-            get { return _currentSongChanged; }
-        }
-
-        public IObservable<Song> CurrentSongCompleted
-        {
-            get { return _currentSongCompleted; }
-        }
-
-        public IObservable<ValueProgress<int>> Buffering
-        {
-            get { return _buffering; }
-        }
-
-        public IObservable<ValueProgress<int>> Progress
-        {
-            get { return _progress; }
-        }
 
         public bool IsMuted
         {
@@ -151,7 +116,7 @@ namespace TRock.Music.Aggregate
                     if (_currentSongPlayer != null)
                     {
                         _currentSongPlayer.IsPlaying = value;
-                    }    
+                    }
                 }
             }
         }
@@ -198,6 +163,14 @@ namespace TRock.Music.Aggregate
         #endregion Properties
 
         #region Methods
+
+        public static T Clamp<T>(T val, T min, T max)
+            where T : IComparable<T>
+        {
+            if (val.CompareTo(min) < 0) return min;
+            if (val.CompareTo(max) > 0) return max;
+            return val;
+        }
 
         public bool CanPlay(Song song)
         {
@@ -255,6 +228,48 @@ namespace TRock.Music.Aggregate
             }
         }
 
+        protected void OnIsMutedChanged(ValueChangedEventArgs<bool> e)
+        {
+            EventHandler<ValueChangedEventArgs<bool>> handler = IsMutedChanged;
+            if (handler != null) handler(this, e);
+        }
+
+        protected void OnIsPlayingChanged(ValueChangedEventArgs<bool> e)
+        {
+            EventHandler<ValueChangedEventArgs<bool>> handler = IsPlayingChanged;
+            if (handler != null) handler(this, e);
+        }
+
+        protected void OnVolumeChanged(ValueChangedEventArgs<float> e)
+        {
+            EventHandler<ValueChangedEventArgs<float>> handler = VolumeChanged;
+            if (handler != null) handler(this, e);
+        }
+
+        protected void OnCurrentSongChanged(ValueChangedEventArgs<Song> e)
+        {
+            EventHandler<ValueChangedEventArgs<Song>> handler = CurrentSongChanged;
+            if (handler != null) handler(this, e);
+        }
+
+        protected void OnCurrentSongCompleted(SongEventArgs e)
+        {
+            EventHandler<SongEventArgs> handler = CurrentSongCompleted;
+            if (handler != null) handler(this, e);
+        }
+
+        protected void OnBuffering(ValueProgressEventArgs<int> e)
+        {
+            EventHandler<ValueProgressEventArgs<int>> handler = Buffering;
+            if (handler != null) handler(this, e);
+        }
+
+        protected void OnProgress(ValueProgressEventArgs<int> e)
+        {
+            EventHandler<ValueProgressEventArgs<int>> handler = Progress;
+            if (handler != null) handler(this, e);
+        }
+
         private void OnCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
             if (e.Action == NotifyCollectionChangedAction.Add)
@@ -266,45 +281,63 @@ namespace TRock.Music.Aggregate
             }
             else if (e.Action == NotifyCollectionChangedAction.Remove)
             {
-                foreach (ISongPlayer oldItem in e.OldItems)
+                foreach (ISongPlayer player in e.OldItems)
                 {
-                    IEnumerable<IDisposable> disposables;
-
-                    if (_eventHooks.TryGetValue(oldItem, out disposables))
-                    {
-                        foreach (var disposable in disposables)
-                        {
-                            disposable.Dispose();
-                        }
-                    }
+                    player.Buffering -= PlayerOnBuffering;
+                    player.CurrentSongChanged -= PlayerOnCurrentSongChanged;
+                    player.CurrentSongCompleted -= PlayerOnCurrentSongCompleted;
+                    player.IsMutedChanged -= PlayerOnIsMutedChanged;
+                    player.IsPlayingChanged -= PlayerOnIsPlayingChanged;
+                    player.Progress -= PlayerOnProgress;
+                    player.VolumeChanged -= PlayerOnVolumeChanged;
                 }
             }
         }
 
         private void InitializePlayer(ISongPlayer player)
         {
-            var disposables = new[]
-            {
-                player.Buffering.Subscribe(_buffering.OnNext),
-                player.CurrentSongChanged.Subscribe(_currentSongChanged.OnNext),
-                player.CurrentSongCompleted.Subscribe(song =>
-                {
-                    _currentSongCompleted.OnNext(song);
-                }),
-                player.IsMutedChanged.Subscribe(_isMutedChanged.OnNext),
-                player.IsPlayingChanged.Subscribe(_isPlayingChanged.OnNext),
-                player.Progress.Subscribe(_progress.OnNext),
-                player.VolumeChanged.Subscribe(_volumeChanged.OnNext)
-            };
-
-            _eventHooks[player] = disposables;
+            player.Buffering += PlayerOnBuffering;
+            player.CurrentSongChanged += PlayerOnCurrentSongChanged;
+            player.CurrentSongCompleted += PlayerOnCurrentSongCompleted;
+            player.IsMutedChanged += PlayerOnIsMutedChanged;
+            player.IsPlayingChanged += PlayerOnIsPlayingChanged;
+            player.Progress += PlayerOnProgress;
+            player.VolumeChanged += PlayerOnVolumeChanged;
         }
 
-        public static T Clamp<T>(T val, T min, T max) where T : IComparable<T>
+        private void PlayerOnVolumeChanged(object sender, ValueChangedEventArgs<float> e)
         {
-            if (val.CompareTo(min) < 0) return min;
-            if (val.CompareTo(max) > 0) return max;
-            return val;
+            OnVolumeChanged(e);
+        }
+
+        private void PlayerOnProgress(object sender, ValueProgressEventArgs<int> e)
+        {
+            OnProgress(e);
+        }
+
+        private void PlayerOnIsPlayingChanged(object sender, ValueChangedEventArgs<bool> e)
+        {
+            OnIsPlayingChanged(e);
+        }
+
+        private void PlayerOnIsMutedChanged(object sender, ValueChangedEventArgs<bool> e)
+        {
+            OnIsMutedChanged(e);
+        }
+
+        private void PlayerOnCurrentSongCompleted(object sender, SongEventArgs e)
+        {
+            OnCurrentSongCompleted(e);
+        }
+
+        private void PlayerOnCurrentSongChanged(object sender, ValueChangedEventArgs<Song> e)
+        {
+            OnCurrentSongChanged(e);
+        }
+
+        private void PlayerOnBuffering(object sender, ValueProgressEventArgs<int> e)
+        {
+            OnBuffering(e);
         }
 
         #endregion Methods

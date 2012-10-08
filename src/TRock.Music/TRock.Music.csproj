@@ -46,9 +46,7 @@
     <Compile Include="Song.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SongEventArgs.cs" />
-    <Compile Include="ValueChange.cs" />
     <Compile Include="ValueChangedEventArgs.cs" />
-    <Compile Include="ValueProgress.cs" />
     <Compile Include="ValueProgressEventArgs.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
