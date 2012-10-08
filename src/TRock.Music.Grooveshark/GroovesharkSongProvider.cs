@@ -41,7 +41,7 @@ namespace TRock.Music.Grooveshark
 
         public Task<IEnumerable<Song>> GetSongs(string query, CancellationToken cancellationToken)
         {
-            return Task.Run(() =>
+            return Task.Factory.StartNew(() =>
             {
                 var response = _client.SearchArtist(query);
                 return ConvertToSongs(response.result.result);
@@ -50,7 +50,7 @@ namespace TRock.Music.Grooveshark
 
         public Task<IEnumerable<Album>> GetAlbums(string artistId, CancellationToken cancellationToken)
         {
-            return Task.Run(() =>
+            return Task.Factory.StartNew(() =>
             {
                 int artistIdAsInt;
 
@@ -78,7 +78,7 @@ namespace TRock.Music.Grooveshark
 
         public Task<ArtistAlbum> GetAlbum(string albumId, CancellationToken cancellationToken)
         {
-            return Task.Run(() =>
+            return Task.Factory.StartNew(() =>
             {
                 int albumIdAsInt;
 

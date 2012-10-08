@@ -42,129 +42,170 @@ namespace TRock.Music.Spotify
 
         #region Methods
 
-        public async Task<IEnumerable<Song>> GetSongs(string query, CancellationToken cancellationToken)
+        public Task<IEnumerable<Song>> GetSongs(string query, CancellationToken cancellationToken)
         {
-            var songs = new List<Song>();
-
-            using (var client = new HttpClient())
+            return Task.Factory.StartNew(() =>
             {
-                var response = await client.GetAsync(new Uri("http://ws.spotify.com/search/1/track.json?q=" + query), cancellationToken);
-                dynamic result = response.Content
-                    .ReadAsStringAsync()
-                    .ContinueWith(task =>
-                    {
-                        if (task.IsFaulted)
-                        {
-                            Trace.WriteLine(task.Exception);
-                            return null;
-                        }
+                var songs = new List<Song>();
 
-                        return JsonConvert.DeserializeObject<dynamic>(task.Result);
-                    }).Result;
-
-                if (result != null)
+                using (var client = new HttpClient())
                 {
-                    var tracks = (IEnumerable<dynamic>)result["tracks"];
-                    foreach (dynamic song in tracks)
-                    {
-                        songs.Add(new Song
+                    dynamic result = client
+                        .GetAsync(new Uri("http://ws.spotify.com/search/1/track.json?q=" + query), cancellationToken)
+                        .ContinueWith(requestTask =>
                         {
-                            Id = song["href"].Value,
-                            Name = song["name"].Value,
-                            Provider = ProviderName,
-                            TotalSeconds = (int)song["length"].Value,
-                            Album = new Album
+                            var response = requestTask.Result;
+                            response.EnsureSuccessStatusCode();
+                            return response.Content.ReadAsStringAsync().Result;
+                        })
+                        .ContinueWith(readTask =>
+                        {
+                            if (readTask.IsFaulted)
                             {
-                                Id = song["album"]["href"].Value,
-                                Name = song["album"]["name"].Value,
-                                CoverArt = _imageProvider.GetCoverArtUri(song["album"]["href"].Value) ?? string.Empty
-                            },
-                            Artist = new Artist
-                            {
-                                Id = song["artists"][0]["href"].Value,
-                                Name = song["artists"][0]["name"].Value
+                                Trace.WriteLine(readTask.Exception);
+                                return null;
                             }
-                        });
+
+                            return JsonConvert.DeserializeObject<dynamic>(readTask.Result);
+                        }).Result;
+
+                    if (result != null)
+                    {
+                        var tracks = (IEnumerable<dynamic>)result["tracks"];
+                        foreach (dynamic song in tracks)
+                        {
+                            songs.Add(new Song
+                            {
+                                Id = song["href"].Value,
+                                Name = song["name"].Value,
+                                Provider = ProviderName,
+                                TotalSeconds = (int)song["length"].Value,
+                                Album = new Album
+                                {
+                                    Id = song["album"]["href"].Value,
+                                    Name = song["album"]["name"].Value,
+                                    CoverArt = _imageProvider.GetCoverArtUri(song["album"]["href"].Value) ?? string.Empty
+                                },
+                                Artist = new Artist
+                                {
+                                    Id = song["artists"][0]["href"].Value,
+                                    Name = song["artists"][0]["name"].Value
+                                }
+                            });
+                        }
                     }
                 }
-            }
 
-            return songs;
+                return (IEnumerable<Song>)songs;
+            }, cancellationToken);
         }
 
-        public async Task<IEnumerable<Album>> GetAlbums(string artistId, CancellationToken cancellationToken)
+        public Task<IEnumerable<Album>> GetAlbums(string artistId, CancellationToken cancellationToken)
         {
-            var albums = new List<Album>();
-
-            using (var client = new HttpClient())
+            return Task.Factory.StartNew(() =>
             {
-                var response = await client.GetAsync(new Uri("http://ws.spotify.com/lookup/1/.json?uri=" + artistId + "&extras=album"), cancellationToken);
-                var result = response.Content.ReadAsStringAsync()
-                    .ContinueWith(task =>
-                    {
-                        if (task.IsFaulted)
-                        {
-                            Trace.WriteLine(task.Exception);
-                            return null;
-                        }
+                var albums = new List<Album>();
 
-                        return JsonConvert.DeserializeObject<dynamic>(task.Result);
-                    }).Result;
-
-
-                if (result != null)
+                using (var client = new HttpClient())
                 {
-                    foreach (var item in result["artist"]["albums"])
-                    {
-                        albums.Add(new Album
+                    dynamic result = client
+                        .GetAsync(new Uri("http://ws.spotify.com/lookup/1/.json?uri=" + artistId + "&extras=album"), cancellationToken)
+                        .ContinueWith(requestTask =>
                         {
-                            Id = item["album"]["href"].Value,
-                            Name = item["album"]["name"].Value,
-                            CoverArt = _imageProvider.GetCoverArtUri(item["album"]["href"].Value) ?? string.Empty
-                        });
+                            var response = requestTask.Result;
+                            response.EnsureSuccessStatusCode();
+                            return response.Content.ReadAsStringAsync().Result;
+                        })
+                        .ContinueWith(readTask =>
+                        {
+                            if (readTask.IsFaulted)
+                            {
+                                Trace.WriteLine(readTask.Exception);
+                                return null;
+                            }
+
+                            return JsonConvert.DeserializeObject<dynamic>(readTask.Result);
+                        }).Result;
+
+                    if (result != null)
+                    {
+                        foreach (var item in result["artist"]["albums"])
+                        {
+                            albums.Add(new Album
+                            {
+                                Id = item["album"]["href"].Value,
+                                Name = item["album"]["name"].Value,
+                                CoverArt = _imageProvider.GetCoverArtUri(item["album"]["href"].Value) ?? string.Empty
+                            });
+                        }
                     }
                 }
-            }
 
-            return albums;
+                return (IEnumerable<Album>)albums;
+            }, cancellationToken);
         }
 
-        public async Task<ArtistAlbum> GetAlbum(string albumId, CancellationToken cancellationToken)
+        public Task<ArtistAlbum> GetAlbum(string albumId, CancellationToken cancellationToken)
         {
-            ArtistAlbum artistAlbum = null;
-
-            using (var client = new HttpClient())
+            return Task.Factory.StartNew(() =>
             {
-                var response = await client.GetAsync(new Uri("http://ws.spotify.com/lookup/1/.json?uri=" + albumId + "&extras=trackdetail"), cancellationToken);
-                var result = response.Content.ReadAsStringAsync()
-                    .ContinueWith(task =>
-                    {
-                        if (task.IsFaulted)
+                ArtistAlbum artistAlbum = null;
+
+                using (var client = new HttpClient())
+                {
+                    dynamic result = client
+                        .GetAsync(
+                            new Uri("http://ws.spotify.com/lookup/1/.json?uri=" + albumId + "&extras=trackdetail"),
+                            cancellationToken)
+                        .ContinueWith(requestTask =>
                         {
-                            Trace.WriteLine(task.Exception);
-                            return null;
+                            var response = requestTask.Result;
+                            response.EnsureSuccessStatusCode();
+                            return response.Content.ReadAsStringAsync().Result;
+                        })
+                        .ContinueWith(readTask =>
+                        {
+                            if (readTask.IsFaulted)
+                            {
+                                Trace.WriteLine(readTask.Exception);
+                                return null;
+                            }
+
+                            return JsonConvert.DeserializeObject<dynamic>(readTask.Result);
+                        }).Result;
+
+                    if (result != null)
+                    {
+                        string artistId = result["album"]["artist-id"].Value;
+                        string artistName = result["album"]["artist"].Value;
+                        string albumName = result["album"]["name"].Value;
+
+                        var songs = new List<Song>();
+
+                        foreach (var song in result["album"]["tracks"])
+                        {
+                            songs.Add(new Song
+                            {
+                                Id = song["href"].Value,
+                                Name = song["name"].Value,
+                                Provider = ProviderName,
+                                TotalSeconds = (int)song["length"].Value,
+                                Album = new Album
+                                {
+                                    Id = result["album"]["href"].Value,
+                                    Name = albumName,
+                                    CoverArt = _imageProvider.GetCoverArtUri(result["album"]["href"].Value) ?? string.Empty
+                                },
+                                Artist = new Artist
+                                {
+                                    Id = artistId,
+                                    Name = artistName
+                                }
+                            });
                         }
 
-                        return JsonConvert.DeserializeObject<dynamic>(task.Result);
-                    }).Result;
-
-
-                if (result != null)
-                {
-                    string artistId = result["album"]["artist-id"].Value;
-                    string artistName = result["album"]["artist"].Value;
-                    string albumName = result["album"]["name"].Value;
-
-                    var songs = new List<Song>();
-
-                    foreach (var song in result["album"]["tracks"])
-                    {
-                        songs.Add(new Song
+                        artistAlbum = new ArtistAlbum
                         {
-                            Id = song["href"].Value,
-                            Name = song["name"].Value,
-                            Provider = ProviderName,
-                            TotalSeconds = (int)song["length"].Value,
                             Album = new Album
                             {
                                 Id = result["album"]["href"].Value,
@@ -175,30 +216,14 @@ namespace TRock.Music.Spotify
                             {
                                 Id = artistId,
                                 Name = artistName
-                            }
-                        });
+                            },
+                            Songs = songs.ToArray()
+                        };
                     }
-
-                    artistAlbum = new ArtistAlbum
-                    {
-                        Album = new Album
-                        {
-                            Id = result["album"]["href"].Value,
-                            Name = albumName,
-                            CoverArt = _imageProvider.GetCoverArtUri(result["album"]["href"].Value) ?? string.Empty
-                        },
-                        Artist = new Artist
-                        {
-                            Id = artistId,
-                            Name = artistName
-                        },
-                        Songs = songs.ToArray()
-                    };
                 }
-            }
 
-            return artistAlbum;
-        }
+                return artistAlbum;
+            }, cancellationToken);}
 
         #endregion Methods
     }
