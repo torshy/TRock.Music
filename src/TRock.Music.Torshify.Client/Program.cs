@@ -28,6 +28,33 @@ namespace TRock.Music.Torshify.Client
 
             string search;
 
+            var queue = new VoteableQueue<Song>();
+            queue.ItemAdded += (sender, eventArgs) =>
+            {
+                if (queue.CurrentQueue.Count() == 1)
+                {
+                    VoteableQueueItem<Song> head;
+
+                    if (queue.TryPeek(out head))
+                    {
+                        client.Start(head.Item);
+                    }
+                }
+            };
+
+            client.CurrentSongCompleted += (sender, eventArgs) =>
+            {
+                VoteableQueueItem<Song> head;
+
+                if (queue.TryDequeue(out head))
+                {
+                    if (queue.TryPeek(out head))
+                    {
+                        client.Start(head.Item);
+                    }
+                }
+            };
+
             Console.Write("Query >> ");
             while ((search = Console.ReadLine()) != null)
             {
@@ -39,8 +66,9 @@ namespace TRock.Music.Torshify.Client
 
                         if (song != null)
                         {
-                            Console.WriteLine("Starting to play " + song.Name + " by " + song.Artist.Name);
-                            client.Start(song);
+                            queue.Enqueue(song);
+                            //Console.WriteLine("Starting to play " + song.Name + " by " + song.Artist.Name);
+                            //client.Start(song);
                         }
                     })
                     .Wait();

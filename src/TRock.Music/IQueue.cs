@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace TRock.Music
 {
-    public interface IQueue<T, TK>
+    public interface IQueue<T, in TK>
     {
         #region Events
 
@@ -15,7 +15,7 @@ namespace TRock.Music
 
         #region Properties
 
-        IEnumerable<QueueItem<TK>> CurrentQueue
+        IEnumerable<T> CurrentQueue
         {
             get;
         }

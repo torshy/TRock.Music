@@ -38,7 +38,7 @@ namespace TRock.Music
 
         #region Properties
 
-        public IEnumerable<QueueItem<T>> CurrentQueue
+        public IEnumerable<VoteableQueueItem<T>> CurrentQueue
         {
             get
             {
@@ -86,10 +86,11 @@ namespace TRock.Music
             {
                 if (_items.Count > 0)
                 {
-                    queueItem = _items[0];
-                    _items.RemoveAt(0);
+                    VoteableQueueItem<T> toRemove = _head;
+                    _items.Remove(toRemove);
                     TryPeek(out _head);
-                    OnItemRemoved(new QueueEventArgs<VoteableQueueItem<T>>(queueItem));
+                    queueItem = _head;
+                    OnItemRemoved(new QueueEventArgs<VoteableQueueItem<T>>(toRemove));
                     return true;
                 }
             }
@@ -104,7 +105,7 @@ namespace TRock.Music
             {
                 if (_items.Count > 0)
                 {
-                    queueItem = _items[0];
+                    queueItem = CurrentQueue.FirstOrDefault();
                     return true;
                 }
             }

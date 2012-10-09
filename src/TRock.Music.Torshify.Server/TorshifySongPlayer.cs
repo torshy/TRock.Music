@@ -288,7 +288,7 @@ namespace TRock.Music.Torshify.Server
             {
                 _currentSongElapsed = _currentSongElapsed.Add(TimeSpan.FromMilliseconds(_timer.Interval));
              
-                OnProgress(new ValueProgressEventArgs<int>(_currentSongElapsed.Seconds, _currentSong.TotalSeconds));
+                OnProgress(new ValueProgressEventArgs<int>((int)_currentSongElapsed.TotalSeconds, _currentSong.TotalSeconds));
             }
         }
 
