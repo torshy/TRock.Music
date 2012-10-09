@@ -12,22 +12,28 @@ namespace TRock.Music.Torshify.Client
 
         static void Main(string[] args)
         {
-            var client = new TorshifySongPlayerClient(new Uri("http://localhost:8081"));
+            var songPlayer = new TorshifySongPlayerClient(new Uri("http://localhost:8081"));
 
             Console.WriteLine("Connecting");
-            
-            if (!client.Connect().Wait(TimeSpan.FromSeconds(5)))
+
+            if (!songPlayer.Connect().Wait(TimeSpan.FromSeconds(5)))
             {
                 Console.WriteLine("Unable to connect...");
                 return;
             }
-            
+
             Console.WriteLine("Connected ;)");
 
             var songProvider = new SpotifySongProvider(new DefaultSpotifyImageProvider());
 
-            string search;
+            //SongQueueSample(songPlayer, songProvider);
+            SongStreamSample(songPlayer, songProvider);
 
+            Console.ReadLine();
+        }
+
+        static void SongQueueSample(ISongPlayer player, ISongProvider songProvider)
+        {
             var queue = new VoteableQueue<Song>();
             queue.ItemAdded += (sender, eventArgs) =>
             {
@@ -39,17 +45,12 @@ namespace TRock.Music.Torshify.Client
 
                     if (queue.TryPeek(out head))
                     {
-                        client.Start(head.Item);
+                        player.Start(head.Item);
                     }
                 }
             };
-
-            client.CurrentSongChanged += (sender, eventArgs) =>
-            {
-                Console.WriteLine("Current song is " + eventArgs.NewValue.Name);
-            };
-
-            client.CurrentSongCompleted += (sender, eventArgs) =>
+            player.CurrentSongChanged += (sender, eventArgs) => Console.WriteLine("Current song is " + eventArgs.NewValue.Name);
+            player.CurrentSongCompleted += (sender, eventArgs) =>
             {
                 VoteableQueueItem<Song> head;
 
@@ -57,35 +58,90 @@ namespace TRock.Music.Torshify.Client
                 {
                     if (queue.TryPeek(out head))
                     {
-                        client.Start(head.Item);
+                        player.Start(head.Item);
                     }
                 }
             };
 
-            Console.Write("Query >> ");
-            while ((search = Console.ReadLine()) != null)
+            string query;
+
+            do
             {
-                songProvider
-                    .GetSongs(search, CancellationToken.None)
-                    .ContinueWith(t =>
+                Console.WriteLine("Enter query >> ");
+                query = Console.ReadLine();
+
+                if (!string.IsNullOrEmpty(query))
+                {
+                    songProvider
+                        .GetSongs(query, CancellationToken.None)
+                        .ContinueWith(resultTask =>
+                        {
+                            var song = resultTask.Result.FirstOrDefault();
+
+                            if (song != null)
+                            {
+                                queue.Enqueue(song);
+                            }
+                        });
+                }
+            } while (string.IsNullOrEmpty(query));
+        }
+
+        static void SongStreamSample(ISongPlayer player, ISongProvider songProvider)
+        {
+            var queue = new VoteableQueue<ISongStream>();
+            var streamPlayer = new AutoplaySongStreamPlayer(player);
+            
+            queue.ItemAdded += (sender, eventArgs) =>
+            {
+                Console.WriteLine("Added song " + eventArgs.Item.Item.Name + " to queue");
+
+                if (queue.CurrentQueue.Count() == 1)
+                {
+                    VoteableQueueItem<ISongStream> head;
+
+                    if (queue.TryPeek(out head))
                     {
-                        var song = t.Result.FirstOrDefault();
+                        streamPlayer.CurrentStream = head.Item;
+                    }
+                }
+            };
+            player.CurrentSongChanged += (sender, eventArgs) => Console.WriteLine("Current song is " + eventArgs.NewValue.Name);
+            streamPlayer.StreamComplete += (sender, args) =>
+            {
+                VoteableQueueItem<ISongStream> head;
 
-                        if (song != null)
+                if (queue.TryDequeue(out head))
+                {
+                    if (queue.TryPeek(out head))
+                    {
+                        streamPlayer.CurrentStream = head.Item;
+                    }
+                }
+            };        
+
+            string query;
+            do
+            {
+                Console.WriteLine("Enter query >> ");
+                query = Console.ReadLine();
+
+                if (!string.IsNullOrEmpty(query))
+                {
+                    songProvider
+                        .GetSongs(query, CancellationToken.None)
+                        .ContinueWith(resultTask =>
                         {
-                            queue.Enqueue(song);
-                        }
-                        else
-                        {
-                            Console.WriteLine("Unable to find " + search);
-                        }
-                    })
-                    .Wait();
+                            var songs = resultTask.Result.ToArray();
 
-                Console.Write("Query >> ");
-            }
-
-            Console.ReadLine();
+                            if (songs.Any())
+                            {
+                                Console.WriteLine("Enqueueing " + songs.Count() + " songs");
+                                queue.Enqueue(new MultiSongStream(songs));
+                            }
+                        });
+                }
+            } while (string.IsNullOrEmpty(query));
         }
 
         #endregion Methods
