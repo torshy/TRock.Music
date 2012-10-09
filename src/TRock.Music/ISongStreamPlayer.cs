@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.Threading;
 
 namespace TRock.Music
@@ -9,10 +8,6 @@ namespace TRock.Music
         #region Events
 
         event EventHandler<SongStreamEventArgs> CurrentStreamChanged;
-
-        event EventHandler<SongStreamEventArgs> StreamAdded;
-
-        event EventHandler<SongStreamEventArgs> StreamRemoved;
 
         event EventHandler<SongStreamEventArgs> StreamComplete;
 
@@ -25,20 +20,12 @@ namespace TRock.Music
         ISongStream CurrentStream
         {
             get;
-        }
-
-        IEnumerable<ISongStream> Streams
-        {
-            get;
+            set;
         }
 
         #endregion Properties
 
         #region Methods
-
-        void Add(ISongStream stream);
-
-        void Remove(ISongStream stream);
 
         bool NextBatch(CancellationToken token);
 

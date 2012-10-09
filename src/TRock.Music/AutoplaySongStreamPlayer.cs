@@ -15,24 +15,33 @@ namespace TRock.Music
         public AutoplaySongStreamPlayer(ISongPlayer songPlayer)
         {
             _songPlayer = songPlayer;
+            _songPlayer.CurrentSongCompleted += OnCurrentSongCompleted;
         }
 
         #endregion Constructors
 
         #region Methods
 
-        protected override void OnStreamAdded(SongStreamEventArgs e)
+        protected virtual void OnCurrentSongCompleted(object sender, SongEventArgs e)
         {
-            base.OnStreamAdded(e);
-
-            lock (_lockObject)
+            if (!NextSongInBatch())
             {
-                if (_streams.Count == 1)
+                if (NextBatch(CancellationToken.None))
                 {
-                    if (NextBatch(CancellationToken.None))
-                    {
-                        NextSongInBatch();
-                    }
+                    NextSongInBatch();
+                }
+            }
+        }
+
+        protected override void OnCurrentStreamChanged(SongStreamEventArgs e)
+        {
+            base.OnCurrentStreamChanged(e);
+
+            if (e.Stream != null)
+            {
+                if (NextBatch(CancellationToken.None))
+                {
+                    NextSongInBatch();
                 }
             }
         }

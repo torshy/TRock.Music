@@ -11,7 +11,7 @@ namespace TRock.Music
 
         protected readonly object _lockObject = new object();
         protected readonly ConcurrentQueue<Song> _songQueue;
-        protected readonly List<ISongStream> _streams;
+        protected ISongStream _currentStream;
 
         #endregion Fields
 
@@ -19,7 +19,6 @@ namespace TRock.Music
 
         public SongStreamPlayer()
         {
-            _streams = new List<ISongStream>();
             _songQueue = new ConcurrentQueue<Song>();
         }
 
@@ -47,23 +46,18 @@ namespace TRock.Music
             {
                 lock (_lockObject)
                 {
-                    if (_streams.Count > 0)
-                    {
-                        return _streams[0];
-                    }
-
-                    return null;
+                    return _currentStream;
                 }
             }
-        }
-
-        public IEnumerable<ISongStream> Streams
-        {
-            get
+            set
             {
-                lock (_lockObject)
+                lock(_lockObject)
                 {
-                    return _streams.ToArray();
+                    Song _;
+                    while (_songQueue.TryDequeue(out _)) { }
+
+                    _currentStream = value;
+                    OnCurrentStreamChanged(new SongStreamEventArgs(_currentStream));
                 }
             }
         }
@@ -71,26 +65,6 @@ namespace TRock.Music
         #endregion Properties
 
         #region Methods
-
-        public void Add(ISongStream stream)
-        {
-            lock (_lockObject)
-            {
-                _streams.Add(stream);
-                OnStreamAdded(new SongStreamEventArgs(stream));
-            }
-        }
-
-        public void Remove(ISongStream stream)
-        {
-            lock (_lockObject)
-            {
-                if (_streams.Remove(stream))
-                {
-                    OnStreamRemoved(new SongStreamEventArgs(stream));
-                }
-            }
-        }
 
         public bool NextBatch(CancellationToken token)
         {
@@ -146,18 +120,6 @@ namespace TRock.Music
         protected virtual void OnCurrentStreamChanged(SongStreamEventArgs e)
         {
             EventHandler<SongStreamEventArgs> handler = CurrentStreamChanged;
-            if (handler != null) handler(this, e);
-        }
-
-        protected virtual void OnStreamAdded(SongStreamEventArgs e)
-        {
-            EventHandler<SongStreamEventArgs> handler = StreamAdded;
-            if (handler != null) handler(this, e);
-        }
-
-        protected virtual void OnStreamRemoved(SongStreamEventArgs e)
-        {
-            EventHandler<SongStreamEventArgs> handler = StreamRemoved;
             if (handler != null) handler(this, e);
         }
 
