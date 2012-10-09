@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
+
 using SignalR.Client;
 using SignalR.Client.Hubs;
 
@@ -22,47 +23,47 @@ namespace TRock.Music.Torshify
         {
             _connection = new HubConnection(serverUri.AbsoluteUri);
             _proxy = _connection.CreateProxy("TorshifyHub");
-            _proxy.On<Tuple<int, int>>("Progress", progress =>
+            _proxy.On<ValueProgressEventArgs<int>>("Progress", progress =>
             {
-                Console.WriteLine("Progress=>" + progress.Item1 + "x" + progress.Item2);
+                Console.WriteLine("Progress=>" + progress.Current + "x" + progress.Total);
 
-                OnProgress(new ValueProgressEventArgs<int>(progress.Item1, progress.Item2));
+                OnProgress(progress);
             });
-            _proxy.On<Tuple<int, int>>("Buffering", progress =>
+            _proxy.On<ValueProgressEventArgs<int>>("Buffering", progress =>
             {
-                Console.WriteLine("Buffering=>" + progress.Item1 + "x" + progress.Item2);
+                Console.WriteLine("Buffering=>" + progress.Current + "x" + progress.Total);
 
-                OnBuffering(new ValueProgressEventArgs<int>(progress.Item1, progress.Item2));
+                OnBuffering(progress);
             });
-            _proxy.On<Tuple<int, int>>("VolumeChanged", volume =>
+            _proxy.On<ValueChangedEventArgs<float>>("VolumeChanged", volume =>
             {
-                Console.WriteLine("VolumeChanged=>" + volume.Item1 + "x" + volume.Item2);
+                Console.WriteLine("VolumeChanged=>" + volume.OldValue + "x" + volume.NewValue);
 
-                OnVolumeChanged(new ValueChangedEventArgs<float>(volume.Item1, volume.Item2));
+                OnVolumeChanged(volume);
             });
-            _proxy.On<bool>("IsMutedChanged", isMuted =>
+            _proxy.On<ValueChangedEventArgs<bool>>("IsMutedChanged", isMuted =>
             {
                 Console.WriteLine("IsMutedChanged=>" + isMuted);
 
-                OnIsMutedChanged(new ValueChangedEventArgs<bool>(!isMuted, isMuted));
+                OnIsMutedChanged(isMuted);
             });
-            _proxy.On<bool>("IsPlayingChanged", isPlaying =>
+            _proxy.On<ValueChangedEventArgs<bool>>("IsPlayingChanged", isPlaying =>
             {
                 Console.WriteLine("IsPlayingChanged=>" + isPlaying);
 
-                OnIsPlayingChanged(new ValueChangedEventArgs<bool>(!isPlaying, isPlaying));
+                OnIsPlayingChanged(isPlaying);
             });
-            _proxy.On<Tuple<Song, Song>>("CurrentSongChanged", song =>
+            _proxy.On<ValueChangedEventArgs<Song>>("CurrentSongChanged", song =>
             {
-                Console.WriteLine("CurrentSongChanged=>" + song.Item1 + "x" + song.Item2);
+                Console.WriteLine("CurrentSongChanged=>" + song.OldValue + "x" + song.NewValue);
 
-                OnCurrentSongChanged(new ValueChangedEventArgs<Song>(song.Item1, song.Item2));
+                OnCurrentSongChanged(song);
             });
-            _proxy.On<Song>("CurrentSongCompleted", song =>
+            _proxy.On<SongEventArgs>("CurrentSongCompleted", song =>
             {
-                Console.WriteLine("CurrentSongCompleted=>" + song.Name);
+                Console.WriteLine("CurrentSongCompleted=>" + song);
 
-                OnCurrentSongCompleted(new SongEventArgs(song));
+                OnCurrentSongCompleted(song);
             });
         }
 
