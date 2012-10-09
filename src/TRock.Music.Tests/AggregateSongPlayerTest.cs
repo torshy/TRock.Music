@@ -11,7 +11,7 @@ using System.Linq;
 
 namespace TRock.Music.Tests
 {
-    public class AggregateSongPlayerTests
+    public class AggregateSongPlayerTest
     {
         #region Methods
 

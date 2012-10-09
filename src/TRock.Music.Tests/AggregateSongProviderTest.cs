@@ -8,7 +8,7 @@ using Xunit;
 
 namespace TRock.Music.Tests
 {
-    public class AggregateSongProviderTests
+    public class AggregateSongProviderTest
     {
         [Fact]
         public async Task DoIt()

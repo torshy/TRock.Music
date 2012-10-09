@@ -31,7 +31,8 @@ namespace TRock.Music.Torshify.Client
             Console.Write("Query >> ");
             while ((search = Console.ReadLine()) != null)
             {
-                songProvider.GetSongs(search, CancellationToken.None)
+                songProvider
+                    .GetSongs(search, CancellationToken.None)
                     .ContinueWith(t =>
                     {
                         var song = t.Result.FirstOrDefault();
@@ -41,7 +42,8 @@ namespace TRock.Music.Torshify.Client
                             Console.WriteLine("Starting to play " + song.Name + " by " + song.Artist.Name);
                             client.Start(song);
                         }
-                    });
+                    })
+                    .Wait();
 
                 Console.Write("Query >> ");
             }

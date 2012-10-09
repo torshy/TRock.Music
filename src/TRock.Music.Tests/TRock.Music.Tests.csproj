@@ -50,11 +50,12 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AggregateSongPlayerTests.cs" />
-    <Compile Include="AggregateSongProviderTests.cs" />
-    <Compile Include="GroovesharkSongProviderTests.cs" />
+    <Compile Include="AggregateSongPlayerTest.cs" />
+    <Compile Include="AggregateSongProviderTest.cs" />
+    <Compile Include="AutoplaySongStreamPlayerTest.cs" />
+    <Compile Include="GroovesharkSongProviderTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SpotifySongProviderTests.cs" />
+    <Compile Include="SpotifySongProviderTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

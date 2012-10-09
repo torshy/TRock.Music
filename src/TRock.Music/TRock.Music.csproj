@@ -43,11 +43,15 @@
     <Compile Include="Album.cs" />
     <Compile Include="Artist.cs" />
     <Compile Include="ArtistAlbum.cs" />
+    <Compile Include="AutoplaySongStreamPlayer.cs" />
     <Compile Include="ISongPlayer.cs" />
     <Compile Include="ISongProvider.cs" />
+    <Compile Include="ISongStream.cs" />
+    <Compile Include="ISongStreamPlayer.cs" />
     <Compile Include="Song.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SongEventArgs.cs" />
+    <Compile Include="SongStreamPlayer.cs" />
     <Compile Include="ValueChangedEventArgs.cs" />
     <Compile Include="ValueProgressEventArgs.cs" />
   </ItemGroup>

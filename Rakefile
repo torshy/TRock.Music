@@ -36,3 +36,8 @@ output :output => :merge do |out|
   out.file 'src\TRock.Music.Reactive\bin\Release\TRock.Music.Reactive.dll', :as=>'TRock.Music.Reactive.dll' 
 end
 
+zip :go => :output do | zip |
+    zip.directories_to_zip "src/TRock.Music.Torshify.Server/bin/Release"
+    zip.output_file = "TRock.Music.Torshify.Server.zip"
+    zip.output_path = "out"
+end

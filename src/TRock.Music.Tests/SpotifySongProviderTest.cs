@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Linq;
 using System.Threading;
-using TRock.Music.Grooveshark;
-
+using System.Threading.Tasks;
+using TRock.Music.Spotify;
 using Xunit;
 
 namespace TRock.Music.Tests
 {
-    public class GroovesharkSongProviderTests
+    public class SpotifySongProviderTest
     {
         #region Fields
 
@@ -17,41 +17,38 @@ namespace TRock.Music.Tests
 
         #region Constructors
 
-        public GroovesharkSongProviderTests()
+        public SpotifySongProviderTest()
         {
-            var client = new GroovesharkClientWrapper();
-            client.Connect();
-            _provider = new GroovesharkSongProvider(client);
+            _provider = new SpotifySongProvider(new DefaultSpotifyImageProvider());
         }
 
         #endregion Constructors
 
-        #region Methods
-
         [Fact]
-        public void SongsGotCorrectProvider()
+        public async Task SongsGotCorrectProvider()
         {
-            var songs = _provider.GetSongs("NOFX", CancellationToken.None).Result;
+            var songs = await _provider.GetSongs("NOFX", CancellationToken.None);
 
             foreach (var song in songs)
             {
-                Assert.Equal(GroovesharkSongProvider.ProviderName, song.Provider);
+                Assert.Equal(SpotifySongProvider.ProviderName, song.Provider);
             }
         }
 
         [Fact]
-        public void SearchForSong()
+        public async Task SearchForSong()
         {
-            var songs = _provider.GetSongs("NOFX Linoleum", CancellationToken.None).Result;
+            var songs = await _provider.GetSongs("NOFX Linoleum", CancellationToken.None);
 
             Assert.NotEmpty(songs);
             Assert.True(songs.Any(s => s.Name.Equals("Linoleum", StringComparison.OrdinalIgnoreCase)));
         }
 
         [Fact]
-        public void SearchForAlbums()
+        public async Task SearchForAlbums()
         {
-            var song = _provider.GetSongs("NOFX", CancellationToken.None).Result.FirstOrDefault();
+            var songs = await _provider.GetSongs("NOFX", CancellationToken.None);
+            var song = songs.First();
             var albums = _provider.GetAlbums(song.Artist.Id, CancellationToken.None).Result;
 
             Assert.NotEmpty(albums);
@@ -59,15 +56,14 @@ namespace TRock.Music.Tests
         }
 
         [Fact]
-        public void SearchForAlbum()
+        public async Task SearchForAlbum()
         {
-            var song = _provider.GetSongs("NOFX", CancellationToken.None).Result.FirstOrDefault();
+            var songs = await _provider.GetSongs("NOFX", CancellationToken.None);
+            var song = songs.First();
             var result = _provider.GetAlbum(song.Album.Id, CancellationToken.None).Result;
-            
+
             Assert.NotNull(result);
             Assert.NotEmpty(result.Songs);
         }
-
-        #endregion Methods
     }
 }
