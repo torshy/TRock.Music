@@ -51,6 +51,7 @@
     <Compile Include="Song.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SongEventArgs.cs" />
+    <Compile Include="SongStreamEventArgs.cs" />
     <Compile Include="SongStreamPlayer.cs" />
     <Compile Include="ValueChangedEventArgs.cs" />
     <Compile Include="ValueProgressEventArgs.cs" />

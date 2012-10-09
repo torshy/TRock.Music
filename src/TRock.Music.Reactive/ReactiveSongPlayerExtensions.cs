@@ -55,5 +55,4 @@ namespace TRock.Music.Reactive
                 handler => player.Progress -= handler);
         }
     }
-
 }
