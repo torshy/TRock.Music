@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Concurrent;
-using System.Collections.Generic;
 using System.Threading;
 
 namespace TRock.Music
@@ -30,11 +29,7 @@ namespace TRock.Music
 
         public event EventHandler<SongEventArgs> SongChanged;
 
-        public event EventHandler<SongStreamEventArgs> StreamAdded;
-
         public event EventHandler<SongStreamEventArgs> StreamComplete;
-
-        public event EventHandler<SongStreamEventArgs> StreamRemoved;
 
         #endregion Events
 
