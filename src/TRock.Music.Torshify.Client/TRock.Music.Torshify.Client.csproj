@@ -4,15 +4,16 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{31C3AE61-AED2-47D1-9A46-606617DC1C00}</ProjectGuid>
-    <OutputType>Library</OutputType>
+    <ProjectGuid>{41A6DFAB-2E6D-4E88-8750-201F31685E22}</ProjectGuid>
+    <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>TRock.Music.Reactive</RootNamespace>
-    <AssemblyName>TRock.Music.Reactive</AssemblyName>
+    <RootNamespace>TRock.Music.Torshify.Client</RootNamespace>
+    <AssemblyName>TRock.Music.Torshify.Client</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -22,6 +23,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
@@ -32,18 +34,6 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Reactive.Core">
-      <HintPath>..\..\packages\Rx-Core.2.0.20622-rc\lib\Net40\System.Reactive.Core.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Reactive.Interfaces">
-      <HintPath>..\..\packages\Rx-Interfaces.2.0.20622-rc\lib\Net40\System.Reactive.Interfaces.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Reactive.Linq">
-      <HintPath>..\..\packages\Rx-Linq.2.0.20622-rc\lib\Net40\System.Reactive.Linq.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Reactive.PlatformServices">
-      <HintPath>..\..\packages\Rx-PlatformServices.2.0.20622-rc\lib\Net40\System.Reactive.PlatformServices.dll</HintPath>
-    </Reference>
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -54,19 +44,22 @@
     <Compile Include="..\CommonAssemblyInfo.cs">
       <Link>Properties\CommonAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="ReactiveSongPlayerExtensions.cs" />
-    <Compile Include="ValueChange.cs" />
-    <Compile Include="ValueProgress.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\TRock.Music.Spotify\TRock.Music.Spotify.csproj">
+      <Project>{d5e03842-fc10-4307-93b0-7eb621e2d188}</Project>
+      <Name>TRock.Music.Spotify</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\TRock.Music.Torshify\TRock.Music.Torshify.csproj">
+      <Project>{fc2702f2-89d3-45af-a427-ccc8d6f3361d}</Project>
+      <Name>TRock.Music.Torshify</Name>
+    </ProjectReference>
     <ProjectReference Include="..\TRock.Music\TRock.Music.csproj">
       <Project>{e4459604-7ccc-4f65-a533-37a727dc7f10}</Project>
       <Name>TRock.Music</Name>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -1,5 +1,3 @@
 ﻿using System.Reflection;
 
-[assembly: AssemblyTrademark("")]
-[assembly: AssemblyCulture("")]
-[assembly: AssemblyConfiguration("")]
+[assembly: AssemblyTitle("TRock.Music.Spotify")]

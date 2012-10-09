@@ -1,6 +1,5 @@
 using System.Reflection;
 using System.Runtime.InteropServices;
-[assembly: AssemblyTitle("TRock.Music")]
 [assembly: AssemblyDescription("Music streaming")]
 [assembly: AssemblyCompany("TRock")]
 [assembly: AssemblyProduct("TRock.Music")]

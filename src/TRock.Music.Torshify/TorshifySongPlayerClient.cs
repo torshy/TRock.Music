@@ -1,5 +1,5 @@
 ﻿using System;
-
+using System.Threading.Tasks;
 using SignalR.Client;
 using SignalR.Client.Hubs;
 
@@ -7,7 +7,7 @@ using TRock.Music.Spotify;
 
 namespace TRock.Music.Torshify
 {
-    public class TorshifySongPlayer : ISongPlayer
+    public class TorshifySongPlayerClient : ISongPlayer
     {
         #region Fields
 
@@ -18,9 +18,9 @@ namespace TRock.Music.Torshify
 
         #region Constructors
 
-        public TorshifySongPlayer(Uri server)
+        public TorshifySongPlayerClient(Uri serverUri)
         {
-            _connection = new HubConnection(server.AbsoluteUri);
+            _connection = new HubConnection(serverUri.AbsoluteUri);
             _proxy = _connection.CreateProxy("TorshifyHub");
             _proxy.On<Tuple<int, int>>("Progress", progress =>
             {
@@ -64,8 +64,6 @@ namespace TRock.Music.Torshify
 
                 OnCurrentSongCompleted(new SongEventArgs(song));
             });
-
-            _connection.Start();
         }
 
         #endregion Constructors
@@ -180,6 +178,16 @@ namespace TRock.Music.Torshify
         #endregion Properties
 
         #region Methods
+
+        public Task Connect()
+        {
+            if (_connection.State == ConnectionState.Disconnected)
+            {
+                return _connection.Start();
+            }
+
+            return Task.Factory.StartNew(() => { });
+        }
 
         public bool CanPlay(Song song)
         {
