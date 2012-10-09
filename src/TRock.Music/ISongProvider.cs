@@ -6,12 +6,23 @@ namespace TRock.Music
 {
     public interface ISongProvider
     {
-        string Name { get; }
+        #region Properties
+
+        string Name
+        {
+            get;
+        }
+
+        #endregion Properties
+
+        #region Methods
 
         Task<IEnumerable<Song>> GetSongs(string query, CancellationToken cancellationToken);
 
         Task<IEnumerable<Album>> GetAlbums(string artistId, CancellationToken cancellationToken);
 
         Task<ArtistAlbum> GetAlbum(string albumId, CancellationToken cancellationToken);
+
+        #endregion Methods
     }
 }

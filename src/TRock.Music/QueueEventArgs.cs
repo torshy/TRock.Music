@@ -4,11 +4,22 @@ namespace TRock.Music
 {
     public class QueueEventArgs<T> : EventArgs
     {
+        #region Constructors
+
         public QueueEventArgs(T item)
         {
             Item = item;
         }
 
-        public T Item { get; private set; }
+        #endregion Constructors
+
+        #region Properties
+
+        public T Item
+        {
+            get; private set;
+        }
+
+        #endregion Properties
     }
 }

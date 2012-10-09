@@ -5,6 +5,8 @@ namespace TRock.Music
 {
     public interface ISongStream
     {
+        #region Properties
+
         string Name
         {
             get;
@@ -20,6 +22,12 @@ namespace TRock.Music
             get;
         }
 
+        #endregion Properties
+
+        #region Methods
+
         bool MoveNext(CancellationToken token);
+
+        #endregion Methods
     }
 }

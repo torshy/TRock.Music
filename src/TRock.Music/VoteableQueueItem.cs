@@ -57,7 +57,5 @@ namespace TRock.Music
         }
 
         #endregion Properties
-
-
     }
 }
