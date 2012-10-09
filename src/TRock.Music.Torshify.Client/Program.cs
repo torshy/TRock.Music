@@ -31,6 +31,8 @@ namespace TRock.Music.Torshify.Client
             var queue = new VoteableQueue<Song>();
             queue.ItemAdded += (sender, eventArgs) =>
             {
+                Console.WriteLine("Added song " + eventArgs.Item.Item.Name + " to queue");
+
                 if (queue.CurrentQueue.Count() == 1)
                 {
                     VoteableQueueItem<Song> head;
@@ -40,6 +42,11 @@ namespace TRock.Music.Torshify.Client
                         client.Start(head.Item);
                     }
                 }
+            };
+
+            client.CurrentSongChanged += (sender, eventArgs) =>
+            {
+                Console.WriteLine("Current song is " + eventArgs.NewValue.Name);
             };
 
             client.CurrentSongCompleted += (sender, eventArgs) =>
@@ -67,8 +74,10 @@ namespace TRock.Music.Torshify.Client
                         if (song != null)
                         {
                             queue.Enqueue(song);
-                            //Console.WriteLine("Starting to play " + song.Name + " by " + song.Artist.Name);
-                            //client.Start(song);
+                        }
+                        else
+                        {
+                            Console.WriteLine("Unable to find " + search);
                         }
                     })
                     .Wait();

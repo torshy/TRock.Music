@@ -25,44 +25,30 @@ namespace TRock.Music.Torshify
             _proxy = _connection.CreateProxy("TorshifyHub");
             _proxy.On<ValueProgressEventArgs<int>>("Progress", progress =>
             {
-                Console.WriteLine("Progress=>" + progress.Current + "x" + progress.Total);
-
                 OnProgress(progress);
             });
             _proxy.On<ValueProgressEventArgs<int>>("Buffering", progress =>
             {
-                Console.WriteLine("Buffering=>" + progress.Current + "x" + progress.Total);
-
                 OnBuffering(progress);
             });
             _proxy.On<ValueChangedEventArgs<float>>("VolumeChanged", volume =>
             {
-                Console.WriteLine("VolumeChanged=>" + volume.OldValue + "x" + volume.NewValue);
-
                 OnVolumeChanged(volume);
             });
             _proxy.On<ValueChangedEventArgs<bool>>("IsMutedChanged", isMuted =>
             {
-                Console.WriteLine("IsMutedChanged=>" + isMuted);
-
                 OnIsMutedChanged(isMuted);
             });
             _proxy.On<ValueChangedEventArgs<bool>>("IsPlayingChanged", isPlaying =>
             {
-                Console.WriteLine("IsPlayingChanged=>" + isPlaying);
-
                 OnIsPlayingChanged(isPlaying);
             });
             _proxy.On<ValueChangedEventArgs<Song>>("CurrentSongChanged", song =>
             {
-                Console.WriteLine("CurrentSongChanged=>" + song.OldValue + "x" + song.NewValue);
-
                 OnCurrentSongChanged(song);
             });
             _proxy.On<SongEventArgs>("CurrentSongCompleted", song =>
             {
-                Console.WriteLine("CurrentSongCompleted=>" + song);
-
                 OnCurrentSongCompleted(song);
             });
         }
