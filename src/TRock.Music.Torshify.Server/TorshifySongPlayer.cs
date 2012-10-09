@@ -140,7 +140,7 @@ namespace TRock.Music.Torshify.Server
 
         public bool CanPlay(Song song)
         {
-            return song.Provider == "Torshify";
+            return song.Provider == "Spotify";
         }
 
         public void Start(Song song)
