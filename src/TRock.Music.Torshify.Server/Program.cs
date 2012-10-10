@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Threading;
-
+using NDesk.Options;
 using SignalR;
 
 using Torshify;
@@ -38,7 +38,23 @@ namespace TRock.Music.Torshify.Server
                 wait.Set();
             };
 
-            session.Login(args[0], args[1]);
+
+            string username = string.Empty;
+            string password = string.Empty;
+
+            new OptionSet
+            {
+                { "u|username", v => username = v },
+                { "p|password", v => password = v },
+            }.Parse(args);
+
+            if (string.IsNullOrEmpty(username) || string.IsNullOrEmpty(password))
+            {
+                Trace.WriteLine("Please specify both username and password. -u=userName -p=password");
+                Environment.Exit(-1);
+            }
+
+            session.Login(username, password);
 
             if (!wait.WaitOne(5000))
             {

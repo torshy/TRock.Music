@@ -16,18 +16,24 @@ namespace TRock.Music.Torshify.Client
 
             Console.WriteLine("Connecting");
 
-            if (!songPlayer.Connect().Wait(TimeSpan.FromSeconds(5)))
+            songPlayer.Connect().ContinueWith(t =>
             {
-                Console.WriteLine("Unable to connect...");
-                return;
-            }
+                if (t.IsFaulted && t.Exception != null)
+                {
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.WriteLine(t.Exception.GetBaseException().Message);
+                    Console.ForegroundColor = ConsoleColor.Gray;
+                }
+                else
+                {
+                    Console.WriteLine("Connected ;)");
 
-            Console.WriteLine("Connected ;)");
+                    var songProvider = new SpotifySongProvider(new DefaultSpotifyImageProvider());
 
-            var songProvider = new SpotifySongProvider(new DefaultSpotifyImageProvider());
-
-            //SongQueueSample(songPlayer, songProvider);
-            SongStreamSample(songPlayer, songProvider);
+                    //SongQueueSample(songPlayer, songProvider);
+                    SongStreamSample(songPlayer, songProvider);        
+                }
+            });
 
             Console.ReadLine();
         }

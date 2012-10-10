@@ -61,6 +61,7 @@
     </Compile>
     <Compile Include="Constants.cs" />
     <Compile Include="Hubs\TorshifyHub.cs" />
+    <Compile Include="Options.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SpotifyLibExtractor.cs" />

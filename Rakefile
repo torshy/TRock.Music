@@ -1,6 +1,6 @@
 require 'albacore'
 
-task :default => :build do
+task :default => :go do
 end
 
 desc "Assembly info generator"
