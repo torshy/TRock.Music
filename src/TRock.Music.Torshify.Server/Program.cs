@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Runtime.InteropServices;
 using System.Threading;
 
 using NDesk.Options;
@@ -14,6 +15,15 @@ namespace TRock.Music.Torshify.Server
 {
     class Program
     {
+        const int SW_HIDE = 0;
+        const int SW_SHOW = 5;
+
+        [DllImport("kernel32.dll")]
+        static extern IntPtr GetConsoleWindow();
+
+        [DllImport("user32.dll")]
+        static extern bool ShowWindow(IntPtr hWnd, int nCmdShow);
+
         #region Methods
 
         static void Main(string[] args)
@@ -29,15 +39,23 @@ namespace TRock.Music.Torshify.Server
             string cacheFolder = Constants.CacheFolder;
             string settingsFolder = Constants.SettingsFolder;
             string userAgent = Constants.UserAgent;
+            bool hidden = false;
 
             new OptionSet
             {
-                { "u|username", v => username = v },
-                { "p|password", v => password = v },
-                { "cf|cachefolder", v => cacheFolder = v },
-                { "sf|settingsfolder", v => settingsFolder = v },
-                { "ua|useragent", v => userAgent = v },
+                { "u|username=", v => username = v },
+                { "p|password=", v => password = v },
+                { "cf|cachefolder=", v => cacheFolder = v },
+                { "sf|settingsfolder=", v => settingsFolder = v },
+                { "ua|useragent=", v => userAgent = v },
+                { "hidden", v => hidden = v != null },
             }.Parse(args);
+
+            if (hidden)
+            {
+                var hwnd = GetConsoleWindow();
+                ShowWindow(hwnd, SW_HIDE);
+            }
 
             var session =
                SessionFactory

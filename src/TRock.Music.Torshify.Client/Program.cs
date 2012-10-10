@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Threading;
-
+using System.Threading.Tasks;
 using TRock.Music.Spotify;
 
 namespace TRock.Music.Torshify.Client
@@ -16,6 +16,8 @@ namespace TRock.Music.Torshify.Client
 
             Console.WriteLine("Connecting");
 
+            var wait = new ManualResetEvent(false);
+
             songPlayer.Connect().ContinueWith(t =>
             {
                 if (t.IsFaulted && t.Exception != null)
@@ -23,19 +25,20 @@ namespace TRock.Music.Torshify.Client
                     Console.ForegroundColor = ConsoleColor.Red;
                     Console.WriteLine(t.Exception.GetBaseException().Message);
                     Console.ForegroundColor = ConsoleColor.Gray;
+                    Environment.Exit(-1);
                 }
-                else
-                {
-                    Console.WriteLine("Connected ;)");
 
-                    var songProvider = new SpotifySongProvider(new DefaultSpotifyImageProvider());
-
-                    //SongQueueSample(songPlayer, songProvider);
-                    SongStreamSample(songPlayer, songProvider);        
-                }
+                wait.Set();
             });
 
-            Console.ReadLine();
+            if (wait.WaitOne(5000))
+            {
+                Console.WriteLine("Connected ;)");
+                var songProvider = new SpotifySongProvider(new DefaultSpotifyImageProvider());
+                SongQueueSample(songPlayer, songProvider);
+                //SongStreamSample(songPlayer, songProvider);
+                Console.ReadLine();
+            }
         }
 
         static void SongQueueSample(ISongPlayer player, ISongProvider songProvider)
