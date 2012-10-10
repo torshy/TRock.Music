@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Threading;
+
 using NDesk.Options;
+
 using SignalR;
 
 using Torshify;
@@ -22,13 +24,28 @@ namespace TRock.Music.Torshify.Server
 
             Trace.Listeners.Add(new ConsoleTraceListener());
 
+            string username = string.Empty;
+            string password = string.Empty;
+            string cacheFolder = Constants.CacheFolder;
+            string settingsFolder = Constants.SettingsFolder;
+            string userAgent = Constants.UserAgent;
+
+            new OptionSet
+            {
+                { "u|username", v => username = v },
+                { "p|password", v => password = v },
+                { "cf|cachefolder", v => cacheFolder = v },
+                { "sf|settingsfolder", v => settingsFolder = v },
+                { "ua|useragent", v => userAgent = v },
+            }.Parse(args);
+
             var session =
                SessionFactory
                    .CreateSession(
                        Constants.ApplicationKey,
-                       Constants.CacheFolder,
-                       Constants.SettingsFolder,
-                       Constants.UserAgent)
+                       cacheFolder,
+                       settingsFolder,
+                       userAgent)
                    .SetPreferredBitrate(Bitrate.Bitrate320k);
 
             var wait = new ManualResetEvent(false);
@@ -37,16 +54,6 @@ namespace TRock.Music.Torshify.Server
                 Trace.WriteLine(eventArgs.Status == Error.OK ? "Logged in" : eventArgs.Message);
                 wait.Set();
             };
-
-
-            string username = string.Empty;
-            string password = string.Empty;
-
-            new OptionSet
-            {
-                { "u|username", v => username = v },
-                { "p|password", v => password = v },
-            }.Parse(args);
 
             if (string.IsNullOrEmpty(username) || string.IsNullOrEmpty(password))
             {
