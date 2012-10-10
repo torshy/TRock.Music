@@ -132,7 +132,7 @@ namespace TRock.Music.Torshify.Client
                         .GetSongs(query, CancellationToken.None)
                         .ContinueWith(resultTask =>
                         {
-                            var songs = resultTask.Result.ToArray();
+                            var songs = resultTask.Result.Take(3).ToArray();
 
                             if (songs.Any())
                             {
