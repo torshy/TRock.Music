@@ -24,7 +24,7 @@ namespace TRock.Music
 
         #region Methods
 
-        T Enqueue(TK stream);
+        T Enqueue(TK stream, Action<T> setup = null);
 
         bool TryDequeue(out T queueItem);
 

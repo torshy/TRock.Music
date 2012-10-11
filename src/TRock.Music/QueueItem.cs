@@ -1,7 +1,18 @@
+using System.Dynamic;
+
 namespace TRock.Music
 {
     public class QueueItem<T>
     {
+        #region Constructors
+
+        public QueueItem()
+        {
+            Bag = new ExpandoObject();
+        }
+
+        #endregion Constructors
+
         #region Properties
 
         public long Id
@@ -10,6 +21,11 @@ namespace TRock.Music
         }
 
         public T Item
+        {
+            get; set;
+        }
+
+        public dynamic Bag
         {
             get; set;
         }

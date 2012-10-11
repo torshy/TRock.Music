@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace TRock.Music
 {
-    public class VoteableQueue<T> : IVoteableQueue<VoteableQueueItem<T>, T>
+    public class VoteableQueue<T> : IVoteableQueue<T>
     {
         #region Fields
 
@@ -34,6 +34,8 @@ namespace TRock.Music
 
         public event EventHandler<QueueEventArgs<VoteableQueueItem<T>>> ItemUpvoted;
 
+        public event EventHandler<QueueEventArgs<VoteableQueueItem<T>>> ItemMoved;
+
         #endregion Events
 
         #region Properties
@@ -57,13 +59,18 @@ namespace TRock.Music
 
         #region Methods
 
-        public VoteableQueueItem<T> Enqueue(T stream)
+        public VoteableQueueItem<T> Enqueue(T stream, Action<VoteableQueueItem<T>> setup = null)
         {
             var item = new VoteableQueueItem<T>
             {
                 Id = _unique++,
                 Item = stream
             };
+
+            if (setup != null)
+            {
+                setup(item);
+            }
 
             lock (_lockObject)
             {
@@ -124,6 +131,7 @@ namespace TRock.Music
                 {
                     result.Upvotes++;
                     OnItemUpvoted(new QueueEventArgs<VoteableQueueItem<T>>(result));
+                    OnItemMoved(new QueueEventArgs<VoteableQueueItem<T>>(result));
                     return true;
                 }
             }
@@ -141,6 +149,7 @@ namespace TRock.Music
                 {
                     result.Downvotes++;
                     OnItemDownvoted(new QueueEventArgs<VoteableQueueItem<T>>(result));
+                    OnItemMoved(new QueueEventArgs<VoteableQueueItem<T>>(result));
                     return true;
                 }
             }
@@ -169,6 +178,12 @@ namespace TRock.Music
         protected void OnItemUpvoted(QueueEventArgs<VoteableQueueItem<T>> e)
         {
             EventHandler<QueueEventArgs<VoteableQueueItem<T>>> handler = ItemUpvoted;
+            if (handler != null) handler(this, e);
+        }
+
+        protected void OnItemMoved(QueueEventArgs<VoteableQueueItem<T>> e)
+        {
+            EventHandler<QueueEventArgs<VoteableQueueItem<T>>> handler = ItemMoved;
             if (handler != null) handler(this, e);
         }
 
