@@ -69,7 +69,7 @@ namespace TRock.Music
                     }
                     else
                     {
-                        MemoryCache.Default.Set(query, t.Result, new CacheItemPolicy { SlidingExpiration = TimeSpan.FromMinutes(1) });
+                        MemoryCache.Default.Set(query, t.Result, new CacheItemPolicy { SlidingExpiration = SlidingExpiration });
                         tcs.SetResult(t.Result);
                     }
                 });
@@ -102,7 +102,7 @@ namespace TRock.Music
                     }
                     else
                     {
-                        MemoryCache.Default.Set(artistId, t.Result, new CacheItemPolicy { SlidingExpiration = TimeSpan.FromMinutes(1) });
+                        MemoryCache.Default.Set(artistId, t.Result, new CacheItemPolicy { SlidingExpiration = SlidingExpiration });
                         tcs.SetResult(t.Result);
                     }
                 });
@@ -135,7 +135,7 @@ namespace TRock.Music
                     }
                     else
                     {
-                        MemoryCache.Default.Set(albumId, t.Result, new CacheItemPolicy { SlidingExpiration = TimeSpan.FromMinutes(1) });
+                        MemoryCache.Default.Set(albumId, t.Result, new CacheItemPolicy { SlidingExpiration = SlidingExpiration });
                         tcs.SetResult(t.Result);
                     }
                 });
