@@ -121,6 +121,11 @@ namespace TRock.Music
             return false;
         }
 
+        public bool IsInFront(VoteableQueueItem<T> queueItem)
+        {
+            return _head == queueItem;
+        }
+
         public bool Upvote(long id)
         {
             lock (_lockObject)

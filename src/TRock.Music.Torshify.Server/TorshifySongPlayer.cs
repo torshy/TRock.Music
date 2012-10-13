@@ -66,7 +66,6 @@ namespace TRock.Music.Torshify.Server
 
         #region Properties
 
-
         public bool IsMuted
         {
             get
@@ -213,6 +212,8 @@ namespace TRock.Music.Torshify.Server
                 _session.PlayerUnload();
                 _waveOut.Stop();
                 _isPlaying = false;
+                _currentSong = null;
+                _currentSongElapsed = TimeSpan.Zero;
 
                 OnIsPlayingChanged(new ValueChangedEventArgs<bool>(true, false));
                 

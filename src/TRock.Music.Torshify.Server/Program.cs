@@ -97,12 +97,12 @@ namespace TRock.Music.Torshify.Server
 
             var hub = GlobalHost.ConnectionManager.GetHubContext<TorshifyHub>();
 
-            player.IsPlayingChanged += (sender, eventArgs) => hub.Clients.IsPlayingChanged(eventArgs.NewValue);
-            player.IsMutedChanged += (sender, eventArgs) => hub.Clients.IsMutedChanged(eventArgs.NewValue);
+            player.IsPlayingChanged += (sender, eventArgs) => hub.Clients.IsPlayingChanged(eventArgs);
+            player.IsMutedChanged += (sender, eventArgs) => hub.Clients.IsMutedChanged(eventArgs);
             player.Buffering += (sender, eventArgs) => hub.Clients.Buffering(eventArgs);
             player.Progress += (sender, eventArgs) => hub.Clients.Progress(eventArgs);
             player.CurrentSongChanged += (sender, eventArgs) => hub.Clients.CurrentSongChanged(eventArgs);
-            player.CurrentSongCompleted += (sender, eventArgs) => hub.Clients.CurrentSongCompleted(eventArgs.Song);
+            player.CurrentSongCompleted += (sender, eventArgs) => hub.Clients.CurrentSongCompleted(eventArgs);
             player.VolumeChanged += (sender, eventArgs) => hub.Clients.VolumeChanged(eventArgs);
 
             Console.ReadLine();

@@ -30,6 +30,8 @@ namespace TRock.Music
 
         bool TryPeek(out T queueItem);
 
+        bool IsInFront(T queueItem);
+
         #endregion Methods
     }
 }
