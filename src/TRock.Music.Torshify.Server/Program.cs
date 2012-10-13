@@ -5,6 +5,8 @@ using System.Threading;
 
 using NDesk.Options;
 
+using Nancy.Hosting.Self;
+
 using SignalR;
 
 using Torshify;
@@ -15,16 +17,20 @@ namespace TRock.Music.Torshify.Server
 {
     class Program
     {
+        #region Fields
+
         const int SW_HIDE = 0;
         const int SW_SHOW = 5;
+
+        #endregion Fields
+
+        #region Methods
 
         [DllImport("kernel32.dll")]
         static extern IntPtr GetConsoleWindow();
 
         [DllImport("user32.dll")]
         static extern bool ShowWindow(IntPtr hWnd, int nCmdShow);
-
-        #region Methods
 
         static void Main(string[] args)
         {
@@ -40,6 +46,7 @@ namespace TRock.Music.Torshify.Server
             string settingsFolder = Constants.SettingsFolder;
             string userAgent = Constants.UserAgent;
             bool hidden = false;
+            int port = 8081;
 
             new OptionSet
             {
@@ -49,6 +56,7 @@ namespace TRock.Music.Torshify.Server
                 { "sf|settingsfolder=", v => settingsFolder = v },
                 { "ua|useragent=", v => userAgent = v },
                 { "hidden", v => hidden = v != null },
+                { "port", v => int.TryParse(v, out port)}
             }.Parse(args);
 
             if (hidden)
@@ -91,7 +99,7 @@ namespace TRock.Music.Torshify.Server
 
             GlobalHost.DependencyResolver.Register(typeof(ISongPlayer), () => player);
 
-            var server = new SignalR.Hosting.Self.Server("http://localhost:8081/");
+            var server = new SignalR.Hosting.Self.Server("http://localhost:" + port + "/");
             server.MapHubs();
             server.Start();
 
@@ -104,6 +112,10 @@ namespace TRock.Music.Torshify.Server
             player.CurrentSongChanged += (sender, eventArgs) => hub.Clients.CurrentSongChanged(eventArgs);
             player.CurrentSongCompleted += (sender, eventArgs) => hub.Clients.CurrentSongCompleted(eventArgs);
             player.VolumeChanged += (sender, eventArgs) => hub.Clients.VolumeChanged(eventArgs);
+
+            var bootstrapper = new NancyBootstrapper(session);
+            var nancyHost = new NancyHost(new Uri("http://localhost:" + (port + 1) + "/torshify/"), bootstrapper);
+            nancyHost.Start();
 
             Console.ReadLine();
         }

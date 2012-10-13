@@ -33,6 +33,12 @@
     <UseVSHostingProcess>false</UseVSHostingProcess>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Nancy">
+      <HintPath>..\..\packages\Nancy.0.12.1\lib\net40\Nancy.dll</HintPath>
+    </Reference>
+    <Reference Include="Nancy.Hosting.Self">
+      <HintPath>..\..\packages\Nancy.Hosting.Self.0.12.1\lib\net40\Nancy.Hosting.Self.dll</HintPath>
+    </Reference>
     <Reference Include="NAudio">
       <HintPath>..\..\packages\NAudio.1.5.5-beta\lib\net20\NAudio.dll</HintPath>
     </Reference>
@@ -61,6 +67,8 @@
     </Compile>
     <Compile Include="Constants.cs" />
     <Compile Include="Hubs\TorshifyHub.cs" />
+    <Compile Include="ImageModule.cs" />
+    <Compile Include="NancyBootstrapper.cs" />
     <Compile Include="Options.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

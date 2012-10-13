@@ -10,6 +10,8 @@ namespace TRock.Music
     {
         #region Fields
 
+        public const string ProviderName = "CachedSongProvider";
+
         private readonly ISongProvider _provider;
 
         #endregion Fields
@@ -20,7 +22,6 @@ namespace TRock.Music
         {
             _provider = provider;
 
-            Name = "CachedSongProvider";
             SlidingExpiration = TimeSpan.FromMinutes(2);
         }
 
@@ -30,14 +31,16 @@ namespace TRock.Music
 
         public TimeSpan SlidingExpiration
         {
-            get; 
+            get;
             set;
         }
 
         public string Name
         {
-            get;
-            private set;
+            get
+            {
+                return ProviderName;
+            }
         }
 
         #endregion Properties
