@@ -33,6 +33,7 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Runtime.Caching" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\CommonAssemblyInfo.cs">
@@ -44,6 +45,7 @@
     <Compile Include="Artist.cs" />
     <Compile Include="ArtistAlbum.cs" />
     <Compile Include="AutoplaySongStreamPlayer.cs" />
+    <Compile Include="CachedSongProvider.cs" />
     <Compile Include="IQueue.cs" />
     <Compile Include="ISongPlayer.cs" />
     <Compile Include="ISongProvider.cs" />
