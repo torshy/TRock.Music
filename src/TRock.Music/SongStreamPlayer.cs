@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.Threading;
 
 namespace TRock.Music
@@ -46,7 +47,7 @@ namespace TRock.Music
             }
             set
             {
-                lock(_lockObject)
+                lock (_lockObject)
                 {
                     Song _;
                     while (_songQueue.TryDequeue(out _)) { }
@@ -54,6 +55,14 @@ namespace TRock.Music
                     _currentStream = value;
                     OnCurrentStreamChanged(new SongStreamEventArgs(_currentStream));
                 }
+            }
+        }
+
+        public IEnumerable<Song> CurrentStreamSongQueue
+        {
+            get
+            {
+                return _songQueue;
             }
         }
 

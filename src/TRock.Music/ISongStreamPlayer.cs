@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Threading;
 
 namespace TRock.Music
@@ -21,6 +22,11 @@ namespace TRock.Music
         {
             get;
             set;
+        }
+
+        IEnumerable<Song> CurrentStreamSongQueue
+        {
+            get;
         }
 
         #endregion Properties
