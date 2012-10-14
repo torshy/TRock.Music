@@ -83,6 +83,7 @@ namespace TRock.Music.Spotify
                                 Album = new Album
                                 {
                                     Id = song["album"]["href"].Value,
+                                    Provider = ProviderName,
                                     Name = song["album"]["name"].Value,
                                     CoverArt = _imageProvider.GetCoverArtUri(song["album"]["href"].Value) ?? string.Empty
                                 },
@@ -134,6 +135,7 @@ namespace TRock.Music.Spotify
                             albums.Add(new Album
                             {
                                 Id = item["album"]["href"].Value,
+                                Provider = ProviderName,
                                 Name = item["album"]["name"].Value,
                                 CoverArt = _imageProvider.GetCoverArtUri(item["album"]["href"].Value) ?? string.Empty
                             });
@@ -176,7 +178,8 @@ namespace TRock.Music.Spotify
 
                     if (result != null)
                     {
-                        string artistId = result["album"]["artist-id"].Value;
+                        dynamic artistIdValue = result["album"]["artist-id"];
+                        string artistId = artistIdValue != null ? artistIdValue.Value : null;
                         string artistName = result["album"]["artist"].Value;
                         string albumName = result["album"]["name"].Value;
 
@@ -193,6 +196,7 @@ namespace TRock.Music.Spotify
                                 Album = new Album
                                 {
                                     Id = result["album"]["href"].Value,
+                                    Provider = ProviderName,
                                     Name = albumName,
                                     CoverArt = _imageProvider.GetCoverArtUri(result["album"]["href"].Value) ?? string.Empty
                                 },
@@ -209,6 +213,7 @@ namespace TRock.Music.Spotify
                             Album = new Album
                             {
                                 Id = result["album"]["href"].Value,
+                                Provider = ProviderName,
                                 Name = albumName,
                                 CoverArt = _imageProvider.GetCoverArtUri(result["album"]["href"].Value) ?? string.Empty
                             },
@@ -223,7 +228,49 @@ namespace TRock.Music.Spotify
                 }
 
                 return artistAlbum;
-            }, cancellationToken);}
+            }, cancellationToken);
+        }
+
+        public Task<Artist> GetArtist(string artistId, CancellationToken cancellationToken)
+        {
+            return Task.Factory.StartNew(() =>
+            {
+                Artist artist = null;
+
+                using (var client = new HttpClient())
+                {
+                    dynamic result = client
+                        .GetAsync(
+                            new Uri("http://ws.spotify.com/lookup/1/.json?uri=" + artistId),
+                            cancellationToken)
+                        .ContinueWith(requestTask =>
+                        {
+                            var response = requestTask.Result;
+                            response.EnsureSuccessStatusCode();
+                            return response.Content.ReadAsStringAsync().Result;
+                        })
+                        .ContinueWith(readTask =>
+                        {
+                            if (readTask.IsFaulted)
+                            {
+                                Trace.WriteLine(readTask.Exception);
+                                return null;
+                            }
+
+                            return JsonConvert.DeserializeObject<dynamic>(readTask.Result);
+                        }).Result;
+
+                    if (result != null)
+                    {
+                        artist = new Artist();
+                        artist.Id = artistId;
+                        artist.Name = result["artist"]["name"].Value;
+                    }
+                }
+
+                return artist;
+            });
+        }
 
         #endregion Methods
     }

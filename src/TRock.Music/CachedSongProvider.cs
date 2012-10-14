@@ -146,6 +146,39 @@ namespace TRock.Music
             return tcs.Task;
         }
 
+        public Task<Artist> GetArtist(string artistId, CancellationToken cancellationToken)
+        {
+            var result = MemoryCache.Default.Get(artistId) as Artist;
+
+            if (result != null)
+            {
+                return Task.Factory.StartNew(() => result);
+            }
+
+            var tcs = new TaskCompletionSource<Artist>();
+
+            _provider
+                .GetArtist(artistId, cancellationToken)
+                .ContinueWith(t =>
+                {
+                    if (t.IsFaulted)
+                    {
+                        tcs.SetException(t.Exception);
+                    }
+                    else if (t.IsCanceled)
+                    {
+                        tcs.SetCanceled();
+                    }
+                    else
+                    {
+                        MemoryCache.Default.Set(artistId, t.Result, new CacheItemPolicy { SlidingExpiration = SlidingExpiration });
+                        tcs.SetResult(t.Result);
+                    }
+                });
+
+            return tcs.Task;
+        }
+
         #endregion Methods
     }
 }

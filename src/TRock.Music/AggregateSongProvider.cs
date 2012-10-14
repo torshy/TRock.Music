@@ -71,7 +71,7 @@ namespace TRock.Music
         {
             return Task.Factory.ContinueWhenAll(Providers.Select(p => p.GetAlbums(artistId, cancellationToken)).ToArray(), tasks =>
             {
-                var albums = new ConcurrentBag<Album>();
+                var albums = new List<Album>();
 
                 foreach (Task<IEnumerable<Album>> task in tasks)
                 {
@@ -98,6 +98,26 @@ namespace TRock.Music
                     if (album != null)
                     {
                         result = album;
+                    }
+                });
+
+                return result;
+            }, cancellationToken);
+        }
+
+        public Task<Artist> GetArtist(string artistId, CancellationToken cancellationToken)
+        {
+            return Task.Factory.StartNew(() =>
+            {
+                Artist result = null;
+
+                Parallel.ForEach(Providers, p =>
+                {
+                    var artist = p.GetArtist(artistId, cancellationToken).Result;
+
+                    if (artist != null)
+                    {
+                        result = artist;
                     }
                 });
 

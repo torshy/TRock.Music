@@ -23,6 +23,8 @@ namespace TRock.Music
 
         Task<ArtistAlbum> GetAlbum(string albumId, CancellationToken cancellationToken);
 
+        Task<Artist> GetArtist(string artistId, CancellationToken cancellationToken);
+
         #endregion Methods
     }
 }

@@ -19,6 +19,11 @@ namespace TRock.Music
             get; set;
         }
 
+        public string Provider
+        {
+            get; set;
+        }
+
         #endregion Properties
     }
 }

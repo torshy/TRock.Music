@@ -66,6 +66,7 @@ namespace TRock.Music.Grooveshark
                     .Select(x => new Album
                     {
                         Id = x.Key.Id,
+                        Provider = ProviderName,
                         Name = x.Key.Name,
                         CoverArt = "http://images.grooveshark.com/static/albums/90_" + x.Key + ".jpg",
                     });
@@ -91,6 +92,7 @@ namespace TRock.Music.Grooveshark
                     var album = new Album
                     {
                         Id = firstSong.Album.Id,
+                        Provider = ProviderName,
                         Name = firstSong.Album.Name,
                         CoverArt = firstSong.Album.CoverArt,
                     };
@@ -113,6 +115,28 @@ namespace TRock.Music.Grooveshark
             }, cancellationToken);
         }
 
+        public Task<Artist> GetArtist(string artistId, CancellationToken cancellationToken)
+        {
+            return Task.Factory.StartNew(() =>
+            {
+                int artistIdAsInt;
+
+                if (int.TryParse(artistId, out artistIdAsInt))
+                {
+                    var response = _client.GetSongsByArtist(artistIdAsInt);
+                    var songs = ConvertToSongs(response.result.songs).ToArray();
+                    var firstSong = songs.FirstOrDefault();
+
+                    if (firstSong != null)
+                    {
+                        return firstSong.Artist;
+                    }
+                }
+
+                return new Artist { Id = artistId, Name = "Unknown" };
+            });
+        }
+
         private static IEnumerable<Song> ConvertToSongs(IEnumerable<SearchArtist.SearchArtistResult> songs)
         {
             return songs.Select(ConvertToSong);
@@ -133,6 +157,7 @@ namespace TRock.Music.Grooveshark
                 Album = new Album
                 {
                     Id = song.AlbumID.ToString(),
+                    Provider = ProviderName,
                     Name = song.AlbumName,
                     CoverArt = "http://images.grooveshark.com/static/albums/90_" + song.AlbumID + ".jpg"
                 },
