@@ -2,7 +2,9 @@
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+
 using TRock.Music.Spotify;
+
 using Xunit;
 
 namespace TRock.Music.Tests
