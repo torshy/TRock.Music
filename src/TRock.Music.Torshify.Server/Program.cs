@@ -95,7 +95,7 @@ namespace TRock.Music.Torshify.Server
                 Environment.Exit(-1);
             }
 
-            var player = new TorshifySongPlayer(session);
+            var player = new TorshifySongPlayer(session, new SessionLinkFactory(session));
 
             GlobalHost.DependencyResolver.Register(typeof(ISongPlayer), () => player);
 

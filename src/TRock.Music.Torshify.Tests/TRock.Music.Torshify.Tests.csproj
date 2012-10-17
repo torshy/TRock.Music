@@ -4,33 +4,34 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{E0AF1BCD-50F7-4A2C-AB85-CBB7A2FC3EC5}</ProjectGuid>
+    <ProjectGuid>{E26DF9AB-4EA8-4BAA-9C7B-4CD14A529F31}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>TRock.Music.Tests</RootNamespace>
-    <AssemblyName>TRock.Music.Tests</AssemblyName>
+    <RootNamespace>TRock.Music.Torshify.Tests</RootNamespace>
+    <AssemblyName>TRock.Music.Torshify.Tests</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\..\</SolutionDir>
-    <RestorePackages>true</RestorePackages>
+    <TargetFrameworkProfile />
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
     <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
+    <OutputPath>bin\x86\Debug\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
     <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
+    <OutputPath>bin\x86\Release\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
     <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <PlatformTarget>AnyCPU</PlatformTarget>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="NSubstitute">
@@ -43,43 +44,36 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
+    <Reference Include="Torshify, Version=12.1.45.0, Culture=neutral, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\Torshify\Torshify.dll</HintPath>
+    </Reference>
     <Reference Include="xunit">
       <HintPath>..\..\packages\xunit.2.0.0-alpha-build1611\lib\net45\xunit.dll</HintPath>
     </Reference>
-    <Reference Include="xunit.extensions">
-      <HintPath>..\..\packages\xunit.extensions.2.0.0-alpha-build1611\lib\net45\xunit.extensions.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AggregateSongPlayerTest.cs" />
-    <Compile Include="AggregateSongProviderTest.cs" />
-    <Compile Include="AutoplaySongStreamPlayerTest.cs" />
-    <Compile Include="GroovesharkSongProviderTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SongStreamTest.cs" />
-    <Compile Include="SpotifySongProviderTest.cs" />
-    <Compile Include="VoteableQueueTest.cs" />
+    <Compile Include="TorshifySongPlayerTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\TRock.Music.Grooveshark\TRock.Music.Grooveshark.csproj">
-      <Project>{2DCB6DE5-F15C-4382-9B97-252C26D1F027}</Project>
-      <Name>TRock.Music.Grooveshark</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\TRock.Music.Reactive\TRock.Music.Reactive.csproj">
-      <Project>{31c3ae61-aed2-47d1-9a46-606617dc1c00}</Project>
-      <Name>TRock.Music.Reactive</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\TRock.Music.Spotify\TRock.Music.Spotify.csproj">
-      <Project>{D5E03842-FC10-4307-93B0-7EB621E2D188}</Project>
-      <Name>TRock.Music.Spotify</Name>
+    <ProjectReference Include="..\TRock.Music.Torshify.Server\TRock.Music.Torshify.Server.csproj">
+      <Project>{2E1AFFB7-E460-4B75-A074-066F7E519F06}</Project>
+      <Name>TRock.Music.Torshify.Server</Name>
     </ProjectReference>
     <ProjectReference Include="..\TRock.Music\TRock.Music.csproj">
-      <Project>{e4459604-7ccc-4f65-a533-37a727dc7f10}</Project>
+      <Project>{E4459604-7CCC-4F65-A533-37A727DC7F10}</Project>
       <Name>TRock.Music</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="..\..\lib\Spotify\libspotify.dll">
+      <Link>libspotify.dll</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

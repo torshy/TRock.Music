@@ -12,6 +12,7 @@ namespace TRock.Music.Torshify.Server
         #region Fields
 
         private readonly ISession _session;
+        private readonly ILinkFactory _linkFactory;
         private readonly Timer _timer;
         private readonly WaveOut _waveOut;
         private readonly object _lockObject = new object();
@@ -27,9 +28,10 @@ namespace TRock.Music.Torshify.Server
 
         #region Constructors
 
-        public TorshifySongPlayer(ISession session)
+        public TorshifySongPlayer(ISession session, ILinkFactory linkFactory)
         {
             _session = session;
+            _linkFactory = linkFactory;
             _session.MusicDeliver += OnMusicDeliver;
             _session.EndOfTrack += OnEndOfTrack;
             _session.PlayTokenLost += OnPlayerTokenLost;
@@ -158,7 +160,7 @@ namespace TRock.Music.Torshify.Server
                 _currentSongElapsed = TimeSpan.Zero;
             }
 
-            using (var link = _session.FromLink<ITrackAndOffset>(song.Id))
+            using (var link = _linkFactory.GetLink(song.Id))
             {
                 using (var track = link.Object.Track)
                 {
@@ -208,6 +210,8 @@ namespace TRock.Music.Torshify.Server
         {
             if (_waveOut != null && _waveOut.PlaybackState != PlaybackState.Stopped)
             {
+                var song = _currentSong;
+
                 _session.PlayerPause();
                 _session.PlayerUnload();
                 _waveOut.Stop();
@@ -216,7 +220,8 @@ namespace TRock.Music.Torshify.Server
                 _currentSongElapsed = TimeSpan.Zero;
 
                 OnIsPlayingChanged(new ValueChangedEventArgs<bool>(true, false));
-                
+                OnCurrentSongCompleted(new SongEventArgs(song));
+
                 _timer.Stop();
             }
         }
