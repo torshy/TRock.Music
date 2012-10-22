@@ -45,6 +45,23 @@ namespace TRock.Music.Torshify.Tests
             bool wasCalled = false;
             _songPlayer.CurrentSongChanged += (sender, args) => wasCalled = true;
             _songPlayer.Start(song);
+            
+            Assert.True(wasCalled);
+        }
+        
+        [Fact]
+        public void CurrentSongCompleted_Is_Raised_When_SongCantLoad()
+        {
+            var song = new Song();
+
+            _link.Object.Track.IsLoaded.Returns(false);
+            _link.Object.Track.Error.Returns(Error.IsLoading);
+
+            bool wasCalled = false;
+            
+            _songPlayer.CurrentSongCompleted += (sender, args) => wasCalled = true;
+            _songPlayer.Start(song);
+
             Assert.True(wasCalled);
         }
 

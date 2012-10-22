@@ -1,0 +1,86 @@
+﻿<UserControl
+    x:Class="TRock.Music.Client.SearchResultsView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
+    xmlns:Converters="clr-namespace:TRock.Music.Client.Converters"
+    xmlns:Music="clr-namespace:TRock.Music;assembly=TRock.Music"
+    xmlns:Client="clr-namespace:TRock.Music.Client"
+    mc:Ignorable="d"
+    d:DesignHeight="300"
+    d:DesignWidth="300"
+    ClipToBounds="True">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary
+                    Source="pack://application:,,,/Resources/Icons.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+            <Converters:BoolToVisibleOrHidden
+                x:Key="BoolToVisibleOrHidden"
+                Collapse="True" />
+            <Converters:BoolToVisibleOrHidden
+                x:Key="BoolToVisibleOrHiddenReverse"
+                Collapse="True"
+                Reverse="True" />
+        </ResourceDictionary>
+    </UserControl.Resources>
+    <Grid>
+        <Button
+            Margin="0,-16,0,0"
+            HorizontalAlignment="Left"
+            VerticalAlignment="Top"
+            Command="{x:Static Client:AppCommands.NavigateBackCommand}"
+            Style="{DynamicResource MetroCircleButtonStyle}"
+            Height="48"
+            Width="48"
+            Visibility="{Binding IsSearching, Converter={StaticResource BoolToVisibleOrHiddenReverse}}">
+            <Rectangle
+                Width="20"
+                Height="20">
+                <Rectangle.Fill>
+                    <VisualBrush
+                        Stretch="Fill"
+                        Visual="{StaticResource appbar_arrow_left}" />
+                </Rectangle.Fill>
+            </Rectangle>
+        </Button>
+        <ListBox
+            Margin="4,30,4,4"
+            ItemsSource="{Binding Songs}"
+            Visibility="{Binding IsSearching, Converter={StaticResource BoolToVisibleOrHiddenReverse}}">
+            <ListBox.ItemTemplate>
+                <DataTemplate
+                    DataType="{x:Type Music:Song}">
+                    <DockPanel
+                        Margin="0,2,0,2">
+                        <Button
+                            Cursor="Hand"
+                            Height="48"
+                            Width="48"
+                            DockPanel.Dock="Left"
+                            Command="{x:Static Client:AppCommands.PlayCommand}"
+                            CommandParameter="{Binding}">
+                            <Image
+                                Source="{Binding Album.CoverArt}" />
+                        </Button>
+                        <StackPanel
+                            Margin="8,0,0,0">
+                            <TextBlock
+                                Text="{Binding Name}"
+                                FontSize="18" />
+                            <TextBlock
+                                Text="{Binding Artist.Name}"
+                                FontSize="12" />
+                        </StackPanel>
+                    </DockPanel>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+        <Controls:ProgressRing
+            IsActive="{Binding IsSearching}"
+            Visibility="{Binding IsSearching, Converter={StaticResource BoolToVisibleOrHidden}}" />
+    </Grid>
+</UserControl>

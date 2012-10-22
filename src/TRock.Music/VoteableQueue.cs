@@ -110,15 +110,9 @@ namespace TRock.Music
         {
             lock (_lockObject)
             {
-                if (_items.Count > 0)
-                {
-                    queueItem = CurrentQueue.FirstOrDefault();
-                    return true;
-                }
+                queueItem = CurrentQueue.FirstOrDefault();
+                return queueItem != null;
             }
-
-            queueItem = null;
-            return false;
         }
 
         public bool IsInFront(VoteableQueueItem<T> queueItem)

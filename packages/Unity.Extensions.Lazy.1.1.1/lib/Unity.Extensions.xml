@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Unity.Extensions</name>
+    </assembly>
+    <members>
+        <member name="T:Unity.Extensions.EnumerableResolutionStrategy">
+            <summary>
+            This strategy implements the logic that will return all instances
+            when an <see cref="T:System.Collections.Generic.IEnumerable`1"/> parameter is detected.
+            </summary>
+        </member>
+        <member name="M:Unity.Extensions.EnumerableResolutionStrategy.PreBuildUp(Microsoft.Practices.ObjectBuilder2.IBuilderContext)">
+            <summary>
+            Do the PreBuildUp stage of construction. This is where the actual work is performed.
+            </summary>
+            <param name="context">Current build context.</param>
+        </member>
+        <member name="T:Unity.Extensions.LazySupportExtension">
+            <summary>
+            Adds <see cref="T:System.Lazy`1"/> and <see cref="T:System.Collections.Generic.IEnumerable`1"/> support for Unity.
+            </summary>
+        </member>
+        <member name="T:Unity.Extensions.LazyResolveBuildPlanPolicy">
+            <summary>
+            Build plan which enables true support for <see cref="T:System.Lazy`1"/>.
+            </summary>
+        </member>
+    </members>
+</doc>

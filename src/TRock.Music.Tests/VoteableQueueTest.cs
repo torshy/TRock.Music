@@ -15,7 +15,7 @@ namespace TRock.Music.Tests
 
             queue.Upvote(item3.Id);
 
-            Assert.Equal(new[] {item1, item3, item2 }, queue.CurrentQueue);
+            Assert.Equal(new[] { item1, item3, item2 }, queue.CurrentQueue);
         }
 
         [Fact]

@@ -23,34 +23,13 @@ namespace TRock.Music.Torshify
         {
             _connection = new HubConnection(serverUri.AbsoluteUri);
             _proxy = _connection.CreateProxy("TorshifyHub");
-            _proxy.On<ValueProgressEventArgs<int>>("Progress", progress =>
-            {
-                OnProgress(progress);
-            });
-            _proxy.On<ValueProgressEventArgs<int>>("Buffering", progress =>
-            {
-                OnBuffering(progress);
-            });
-            _proxy.On<ValueChangedEventArgs<float>>("VolumeChanged", volume =>
-            {
-                OnVolumeChanged(volume);
-            });
-            _proxy.On<ValueChangedEventArgs<bool>>("IsMutedChanged", isMuted =>
-            {
-                OnIsMutedChanged(isMuted);
-            });
-            _proxy.On<ValueChangedEventArgs<bool>>("IsPlayingChanged", isPlaying =>
-            {
-                OnIsPlayingChanged(isPlaying);
-            });
-            _proxy.On<ValueChangedEventArgs<Song>>("CurrentSongChanged", song =>
-            {
-                OnCurrentSongChanged(song);
-            });
-            _proxy.On<SongEventArgs>("CurrentSongCompleted", song =>
-            {
-                OnCurrentSongCompleted(song);
-            });
+            _proxy.On<ValueProgressEventArgs<int>>("Progress", OnProgress);
+            _proxy.On<ValueProgressEventArgs<int>>("Buffering", OnBuffering);
+            _proxy.On<ValueChangedEventArgs<float>>("VolumeChanged", OnVolumeChanged);
+            _proxy.On<ValueChangedEventArgs<bool>>("IsMutedChanged", OnIsMutedChanged);
+            _proxy.On<ValueChangedEventArgs<bool>>("IsPlayingChanged", OnIsPlayingChanged);
+            _proxy.On<ValueChangedEventArgs<Song>>("CurrentSongChanged", OnCurrentSongChanged);
+            _proxy.On<SongEventArgs>("CurrentSongCompleted", OnCurrentSongCompleted);
         }
 
         #endregion Constructors

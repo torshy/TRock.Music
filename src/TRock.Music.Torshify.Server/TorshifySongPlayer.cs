@@ -160,13 +160,14 @@ namespace TRock.Music.Torshify.Server
                 _currentSongElapsed = TimeSpan.Zero;
             }
 
+            var oldSong = _currentSong;
+
             using (var link = _linkFactory.GetLink(song.Id))
             {
                 using (var track = link.Object.Track)
                 {
                     if (track.WaitUntilLoaded(2000))
                     {
-                        var oldSong = _currentSong;
                         _session.PlayerLoad(track);
                         _session.PlayerPlay();
                         _currentSong = song;
@@ -177,6 +178,7 @@ namespace TRock.Music.Torshify.Server
                     }
                     else
                     {
+                        OnCurrentSongChanged(new ValueChangedEventArgs<Song>(oldSong, song));
                         OnCurrentSongCompleted(new SongEventArgs(song));
                     }
                 }
@@ -240,7 +242,6 @@ namespace TRock.Music.Torshify.Server
             }
         }
 
-
         protected void OnIsMutedChanged(ValueChangedEventArgs<bool> e)
         {
             EventHandler<ValueChangedEventArgs<bool>> handler = IsMutedChanged;
@@ -302,7 +303,6 @@ namespace TRock.Music.Torshify.Server
         {
             if (e.Status == Error.OK)
             {
-                OnCurrentSongCompleted(new SongEventArgs(_currentSong));
                 Stop();
             }
         }

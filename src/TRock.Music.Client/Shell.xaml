@@ -1,0 +1,34 @@
+﻿<Controls:MetroWindow
+    x:Class="TRock.Music.Client.Shell"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
+    xmlns:Regions="clr-namespace:Microsoft.Practices.Prism.Regions;assembly=Microsoft.Practices.Prism"
+    Title="TROck Music Client"
+    ShowTitleBar="False"
+    Height="350"
+    Width="525"
+    MinWidth="250"
+    MinHeight="250"
+    Background="#E07B00"
+    FontSize="16">
+    <Controls:MetroWindow.WindowCommands>
+        <Controls:WindowCommands>
+            <Button
+                Content="Yo"
+                Click="Button_Click_1"/>
+        </Controls:WindowCommands>
+    </Controls:MetroWindow.WindowCommands>
+    <Controls:MetroWindow.Flyouts>
+        <Controls:Flyout
+            x:Name="_playlistFlyout"
+            Header="Playlist"
+            Position="Right">
+            
+        </Controls:Flyout>
+    </Controls:MetroWindow.Flyouts>
+    <Grid>
+        <Controls:TransitioningContentControl
+            Regions:RegionManager.RegionName="MainRegion" />
+    </Grid>
+</Controls:MetroWindow>
