@@ -14,6 +14,16 @@ namespace TRock.Music.Torshify
 
         #endregion Fields
 
+        #region Constructors
+
+        public TorshifyServerProcessHandler()
+        {
+            Port = 8081;
+            Hidden = true;
+        }
+
+        #endregion Constructors
+
         #region Enumerations
 
         public enum JobObjectInfoType
@@ -43,6 +53,12 @@ namespace TRock.Music.Torshify
             set;
         }
 
+        public int Port
+        {
+            get;
+            set;
+        }
+
         public string TorshifyServerLocation
         {
             get;
@@ -52,6 +68,12 @@ namespace TRock.Music.Torshify
         public bool CloseServerTogetherWithClient
         {
             get;
+            set;
+        }
+
+        public bool Hidden
+        {
+            get; 
             set;
         }
 
@@ -65,7 +87,7 @@ namespace TRock.Music.Torshify
 
             if (torshify == null)
             {
-                torshify = StartTorshifyServer(UserName, Password, TorshifyServerLocation);
+                torshify = StartTorshifyServer();
             }
 
             if (torshify != null && CloseServerTogetherWithClient)
@@ -75,26 +97,31 @@ namespace TRock.Music.Torshify
             }
         }
 
-        private static Process StartTorshifyServer(string userName, string password, string serverLocation)
+        private Process StartTorshifyServer()
         {
-            if (!File.Exists(serverLocation))
+            if (!File.Exists(TorshifyServerLocation))
             {
-                throw new FileNotFoundException("Torshify Server is not located at " + serverLocation);
+                throw new FileNotFoundException("Torshify Server is not located at " + TorshifyServerLocation);
             }
 
-            if (string.IsNullOrEmpty(userName))
+            if (string.IsNullOrEmpty(UserName))
             {
                 throw new ArgumentException("Please specify your Spotify username");
             }
 
-            if (string.IsNullOrEmpty(password))
+            if (string.IsNullOrEmpty(Password))
             {
                 throw new ArgumentException("Please specify your Spotify password");
             }
 
-            var credentials = string.Format("/username={0} /password={1}", userName, password);
+            var credentials = string.Format("/username={0} /password={1} /port={2}", UserName, Password, Port);
 
-            Process torshify = Process.Start(serverLocation, credentials);
+            if (Hidden)
+            {
+                credentials += " /hidden";
+            }
+
+            Process torshify = Process.Start(TorshifyServerLocation, credentials);
 
             if (torshify != null)
             {
@@ -102,7 +129,7 @@ namespace TRock.Music.Torshify
                 {
                     if (!AppDomain.CurrentDomain.IsFinalizingForUnload())
                     {
-                        torshify = StartTorshifyServer(userName, password, serverLocation);
+                        torshify = StartTorshifyServer();
                     }
                 };
 
