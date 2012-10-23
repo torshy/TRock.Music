@@ -13,15 +13,20 @@ namespace TRock.Music.Client
         #region Fields
 
         private readonly IRegionManager _regionManager;
+        private readonly IVoteableQueue<ISongStream> _queue;
         private readonly Lazy<ISongStreamPlayer> _songStreamPlayer;
 
         #endregion Fields
 
         #region Constructors
 
-        public AppModule(IRegionManager regionManager, Lazy<ISongStreamPlayer> songStreamPlayer)
+        public AppModule(
+            IRegionManager regionManager, 
+            IVoteableQueue<ISongStream> queue, 
+            Lazy<ISongStreamPlayer> songStreamPlayer)
         {
             _regionManager = regionManager;
+            _queue = queue;
             _songStreamPlayer = songStreamPlayer;
         }
 
@@ -46,7 +51,9 @@ namespace TRock.Music.Client
         {
             if (argument is Song)
             {
-                _songStreamPlayer.Value.CurrentStream = new SingleSongStream(((Song) argument));
+                _songStreamPlayer.Value.ToString();
+                _queue.Enqueue(new SingleSongStream(((Song) argument)));
+                //_songStreamPlayer.Value.CurrentStream = new SingleSongStream(((Song) argument));
             }
         }
 

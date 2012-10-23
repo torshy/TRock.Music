@@ -10,7 +10,7 @@ namespace TRock.Music
 
         event EventHandler<SongStreamEventArgs> CurrentStreamChanged;
 
-        event EventHandler<SongStreamEventArgs> StreamComplete;
+        event EventHandler<SongStreamEventArgs> CurrentStreamComplete;
 
         event EventHandler<SongEventArgs> SongChanged;
 

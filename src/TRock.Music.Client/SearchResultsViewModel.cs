@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -10,6 +11,7 @@ using System.Windows.Input;
 using Microsoft.Practices.Prism.Commands;
 using Microsoft.Practices.Prism.Regions;
 using Microsoft.Practices.Prism.ViewModel;
+using System.Linq;
 
 namespace TRock.Music.Client
 {
@@ -19,7 +21,9 @@ namespace TRock.Music.Client
 
         private readonly CancellationTokenSource _cts;
         private readonly ISongProvider _songProvider;
-        private readonly ICollection<Song> _songs;
+        private readonly ObservableCollection<Song> _songs;
+        private readonly ObservableCollection<ArtistAlbum> _albums;
+        private readonly ObservableCollection<ArtistAlbum> _artists;
 
         private bool _isSearching;
 
@@ -31,6 +35,8 @@ namespace TRock.Music.Client
         {
             _songProvider = songProvider;
             _songs = new ObservableCollection<Song>();
+            _albums = new ObservableCollection<ArtistAlbum>();
+            _artists = new ObservableCollection<ArtistAlbum>();
             _cts = new CancellationTokenSource();
             CancelSearchCommand = new DelegateCommand(() => _cts.Cancel());
         }
@@ -52,7 +58,26 @@ namespace TRock.Music.Client
 
         public ICollectionView Songs
         {
-            get { return CollectionViewSource.GetDefaultView(_songs); }
+            get
+            {
+                return new ListCollectionView(_songs);
+            }
+        }
+
+        public ICollectionView Albums
+        {
+            get
+            {
+                return new ListCollectionView(_albums);
+            }
+        }
+
+        public ICollectionView Artists
+        {
+            get
+            {
+                return new ListCollectionView(_artists);
+            }
         }
 
         public ICommand CancelSearchCommand
@@ -80,11 +105,36 @@ namespace TRock.Music.Client
                     }
                     else if (queryTask.IsCompleted)
                     {
+                        _albums.Clear();
+                        _artists.Clear();
                         _songs.Clear();
 
                         foreach (var song in queryTask.Result)
                         {
                             _songs.Add(song);
+                        }
+
+                        var artists = queryTask.Result.GroupBy(q => q.Artist);
+                        var albums = queryTask.Result.GroupBy(q => q.Album);
+
+                        foreach (var album in albums)
+                        {
+                            _albums.Add(new ArtistAlbum
+                            {
+                                Album = album.Key, 
+                                Artist = album.First().Artist,
+                                Songs = album.ToArray()
+                            });
+                        }
+
+                        foreach (var artist in artists)
+                        {
+                            _artists.Add(new ArtistAlbum
+                            {
+                                Album = artist.First().Album,
+                                Artist = artist.Key,
+                                Songs = artist.ToArray()
+                            });
                         }
                     }
                     else if (queryTask.IsFaulted)

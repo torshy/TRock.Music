@@ -23,6 +23,7 @@ namespace TRock.Music.Client
             base.ConfigureContainer();
 
             Container.AddNewExtension<LazySupportExtension>();
+            Container.RegisterType<IVoteableQueue<ISongStream>, VoteableQueue<ISongStream>>(new ContainerControlledLifetimeManager());
             Container.RegisterType<IGroovesharkClient, GroovesharkClientWrapper>(new ContainerControlledLifetimeManager(), new InjectionMethod("Connect"));
             Container.RegisterType<ISongProvider, GroovesharkSongProvider>(GroovesharkSongProvider.ProviderName, new ContainerControlledLifetimeManager());
             Container.RegisterType<ISongPlayer, GroovesharkSongPlayer>(new ContainerControlledLifetimeManager());

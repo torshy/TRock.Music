@@ -31,6 +31,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TRock.Music.Torshify.Tests"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TRock.Music.Client", "src\TRock.Music.Client\TRock.Music.Client.csproj", "{D5EC2FAC-F6AE-4449-90AC-A992CADE9402}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Samples", "Samples", "{DE4A89BE-5E3B-4331-A36F-3E56212A6103}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -120,6 +122,10 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{D5EC2FAC-F6AE-4449-90AC-A992CADE9402} = {DE4A89BE-5E3B-4331-A36F-3E56212A6103}
+		{41A6DFAB-2E6D-4E88-8750-201F31685E22} = {DE4A89BE-5E3B-4331-A36F-3E56212A6103}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		EnterpriseLibraryConfigurationToolBinariesPath = packages\Unity.2.1.505.2\lib\NET35

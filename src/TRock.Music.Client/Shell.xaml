@@ -15,7 +15,7 @@
     <Controls:MetroWindow.WindowCommands>
         <Controls:WindowCommands>
             <Button
-                Content="Yo"
+                Content="Playlist"
                 Click="Button_Click_1"/>
         </Controls:WindowCommands>
     </Controls:MetroWindow.WindowCommands>

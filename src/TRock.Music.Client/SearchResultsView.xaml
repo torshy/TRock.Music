@@ -47,38 +47,105 @@
                 </Rectangle.Fill>
             </Rectangle>
         </Button>
-        <ListBox
-            Margin="4,30,4,4"
-            ItemsSource="{Binding Songs}"
-            Visibility="{Binding IsSearching, Converter={StaticResource BoolToVisibleOrHiddenReverse}}">
-            <ListBox.ItemTemplate>
-                <DataTemplate
-                    DataType="{x:Type Music:Song}">
-                    <DockPanel
-                        Margin="0,2,0,2">
-                        <Button
-                            Cursor="Hand"
-                            Height="48"
-                            Width="48"
-                            DockPanel.Dock="Left"
-                            Command="{x:Static Client:AppCommands.PlayCommand}"
-                            CommandParameter="{Binding}">
-                            <Image
-                                Source="{Binding Album.CoverArt}" />
-                        </Button>
-                        <StackPanel
-                            Margin="8,0,0,0">
-                            <TextBlock
-                                Text="{Binding Name}"
-                                FontSize="18" />
-                            <TextBlock
-                                Text="{Binding Artist.Name}"
-                                FontSize="12" />
-                        </StackPanel>
-                    </DockPanel>
-                </DataTemplate>
-            </ListBox.ItemTemplate>
-        </ListBox>
+        <TabControl
+            Visibility="{Binding IsSearching, Converter={StaticResource BoolToVisibleOrHiddenReverse}}"
+            Margin="4,30,4,4">
+            <TabItem
+                Header="Songs">
+                <DataGrid
+                    AutoGenerateColumns="False"
+                    ItemsSource="{Binding Songs}"
+                    IsReadOnly="True">
+                    <DataGrid.Columns>
+                        <DataGridTemplateColumn
+                            Header="Play">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate
+                                    DataType="{x:Type Music:Song}">
+                                    <Button
+                                        Content="Play"
+                                        Command="{x:Static Client:AppCommands.PlayCommand}"
+                                        CommandParameter="{Binding}" />
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                        <DataGridTemplateColumn
+                            Header="Track">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate
+                                    DataType="{x:Type Music:Song}">
+                                    <TextBlock
+                                        Text="{Binding Name}" />
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                    </DataGrid.Columns>
+                </DataGrid>
+            </TabItem>
+            <TabItem
+                Header="Albums">
+                <ListBox
+                    ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                    ItemsSource="{Binding Albums}">
+                    <ListBox.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <WrapPanel
+                                ItemHeight="128"
+                                ItemWidth="128" />
+                        </ItemsPanelTemplate>
+                    </ListBox.ItemsPanel>
+                    <ListBox.ItemTemplate>
+                        <DataTemplate
+                            DataType="{x:Type Music:ArtistAlbum}">
+                            <DockPanel
+                                Margin="4">
+                                <TextBlock
+                                    DockPanel.Dock="Bottom"
+                                    Text="{Binding Album.Name}"
+                                    TextTrimming="CharacterEllipsis"
+                                    FontWeight="Medium"
+                                    FontSize="12" />
+                                <Image
+                                    Stretch="Uniform"
+                                    Source="{Binding Album.CoverArt}" />
+                            </DockPanel>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
+            </TabItem>
+            <TabItem
+                Header="Artist">
+                <ListBox
+                    ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                    ItemsSource="{Binding Artists}">
+                    <ListBox.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <WrapPanel
+                                ItemHeight="128"
+                                ItemWidth="128" />
+                        </ItemsPanelTemplate>
+                    </ListBox.ItemsPanel>
+                    <ListBox.ItemTemplate>
+                        <DataTemplate
+                            DataType="{x:Type Music:ArtistAlbum}">
+                            <DockPanel
+                                Margin="4">
+                                <TextBlock
+                                    DockPanel.Dock="Bottom"
+                                    Text="{Binding Artist.Name}"
+                                    TextTrimming="CharacterEllipsis"
+                                    FontWeight="Medium"
+                                    FontSize="12" />
+                                <Image
+                                    Stretch="Uniform"
+                                    Source="{Binding Album.CoverArt}" />
+                            </DockPanel>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
+            </TabItem>
+        </TabControl>
+
         <Controls:ProgressRing
             IsActive="{Binding IsSearching}"
             Visibility="{Binding IsSearching, Converter={StaticResource BoolToVisibleOrHidden}}" />

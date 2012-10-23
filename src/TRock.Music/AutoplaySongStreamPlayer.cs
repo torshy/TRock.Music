@@ -7,14 +7,17 @@ namespace TRock.Music
         #region Fields
 
         private readonly ISongPlayer _songPlayer;
+        private readonly IVoteableQueue<ISongStream> _streamQueue;
 
         #endregion Fields
 
         #region Constructors
 
-        public AutoplaySongStreamPlayer(ISongPlayer songPlayer)
+        public AutoplaySongStreamPlayer(ISongPlayer songPlayer, IVoteableQueue<ISongStream> streamQueue)
         {
             _songPlayer = songPlayer;
+            _streamQueue = streamQueue;
+            _streamQueue.ItemAdded += StreamQueueOnItemAdded;
             _songPlayer.CurrentSongCompleted += OnCurrentSongCompleted;
         }
 
@@ -46,6 +49,18 @@ namespace TRock.Music
             }
         }
 
+        protected override void OnCurrentStreamComplete(SongStreamEventArgs e)
+        {
+            base.OnCurrentStreamComplete(e);
+
+            VoteableQueueItem<ISongStream> item;
+
+            if (_streamQueue.TryGetNext(out item))
+            {
+                CurrentStream = item.Item;
+            }
+        }
+
         protected override void OnSongChanged(SongEventArgs e)
         {
             base.OnSongChanged(e);
@@ -53,6 +68,14 @@ namespace TRock.Music
             if (_songPlayer.CanPlay(e.Song))
             {
                 _songPlayer.Start(e.Song);
+            }
+        }
+
+        private void StreamQueueOnItemAdded(object sender, QueueEventArgs<VoteableQueueItem<ISongStream>> e)
+        {
+            if (_streamQueue.IsInFront(e.Item))
+            {
+                CurrentStream = e.Item.Item;
             }
         }
 

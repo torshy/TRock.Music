@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Linq;
 using System.Threading;
-using System.Threading.Tasks;
 using TRock.Music.Spotify;
 
 namespace TRock.Music.Torshify.Client
@@ -36,7 +35,6 @@ namespace TRock.Music.Torshify.Client
                 Console.WriteLine("Connected ;)");
                 var songProvider = new SpotifySongProvider(new DefaultSpotifyImageProvider());
                 SongQueueSample(songPlayer, songProvider);
-                //SongStreamSample(songPlayer, songProvider);
                 Console.ReadLine();
             }
         }
@@ -90,63 +88,6 @@ namespace TRock.Music.Torshify.Client
                             if (song != null)
                             {
                                 queue.Enqueue(song);
-                            }
-                        });
-                }
-            } while (string.IsNullOrEmpty(query));
-        }
-
-        static void SongStreamSample(ISongPlayer player, ISongProvider songProvider)
-        {
-            var queue = new VoteableQueue<ISongStream>();
-            var streamPlayer = new AutoplaySongStreamPlayer(player);
-            
-            queue.ItemAdded += (sender, eventArgs) =>
-            {
-                Console.WriteLine("Added song " + eventArgs.Item.Item.Name + " to queue");
-
-                if (queue.CurrentQueue.Count() == 1)
-                {
-                    VoteableQueueItem<ISongStream> head;
-
-                    if (queue.TryPeek(out head))
-                    {
-                        streamPlayer.CurrentStream = head.Item;
-                    }
-                }
-            };
-            player.CurrentSongChanged += (sender, eventArgs) => Console.WriteLine("Current song is " + eventArgs.NewValue.Name);
-            streamPlayer.StreamComplete += (sender, args) =>
-            {
-                VoteableQueueItem<ISongStream> head;
-
-                if (queue.TryDequeue(out head))
-                {
-                    if (queue.TryPeek(out head))
-                    {
-                        streamPlayer.CurrentStream = head.Item;
-                    }
-                }
-            };        
-
-            string query;
-            do
-            {
-                Console.WriteLine("Enter query >> ");
-                query = Console.ReadLine();
-
-                if (!string.IsNullOrEmpty(query))
-                {
-                    songProvider
-                        .GetSongs(query, CancellationToken.None)
-                        .ContinueWith(resultTask =>
-                        {
-                            var songs = resultTask.Result.Take(3).ToArray();
-
-                            if (songs.Any())
-                            {
-                                Console.WriteLine("Enqueueing " + songs.Count() + " songs");
-                                queue.Enqueue(new MultiSongStream(songs));
                             }
                         });
                 }

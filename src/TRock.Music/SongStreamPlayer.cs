@@ -30,7 +30,7 @@ namespace TRock.Music
 
         public event EventHandler<SongEventArgs> SongChanged;
 
-        public event EventHandler<SongStreamEventArgs> StreamComplete;
+        public event EventHandler<SongStreamEventArgs> CurrentStreamComplete;
 
         #endregion Events
 
@@ -101,7 +101,7 @@ namespace TRock.Music
 
             if (stream != null && _songQueue.IsEmpty && !NextBatch(CancellationToken.None))
             {
-                OnStreamComplete(new SongStreamEventArgs(stream));
+                OnCurrentStreamComplete(new SongStreamEventArgs(stream));
                 return false;
             }
 
@@ -127,9 +127,9 @@ namespace TRock.Music
             if (handler != null) handler(this, e);
         }
 
-        protected virtual void OnStreamComplete(SongStreamEventArgs e)
+        protected virtual void OnCurrentStreamComplete(SongStreamEventArgs e)
         {
-            EventHandler<SongStreamEventArgs> handler = StreamComplete;
+            EventHandler<SongStreamEventArgs> handler = CurrentStreamComplete;
             if (handler != null) handler(this, e);
         }
 

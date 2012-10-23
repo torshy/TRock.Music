@@ -12,6 +12,7 @@ namespace TRock.Music.Tests
 
         private readonly ISongPlayer _songPlayer;
         private readonly ISongStreamPlayer _streamPlayer;
+        private readonly IVoteableQueue<ISongStream> _streamQueue;
 
         #endregion Fields
 
@@ -19,13 +20,15 @@ namespace TRock.Music.Tests
 
         public AutoplaySongStreamPlayerTest()
         {
+            _streamQueue = Substitute.For<IVoteableQueue<ISongStream>>();
             _songPlayer = Substitute.For<ISongPlayer>();
             _songPlayer.CanPlay(Arg.Any<Song>()).Returns(true);
             _songPlayer
                 .When(x => x.Start(Arg.Any<Song>()))
                 .Do(c => _songPlayer.CurrentSong.Returns(c[0] as Song));
 
-            _streamPlayer = new AutoplaySongStreamPlayer(_songPlayer);
+
+            _streamPlayer = new AutoplaySongStreamPlayer(_songPlayer, _streamQueue);
         }
 
         #endregion Constructors
