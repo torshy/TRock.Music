@@ -245,12 +245,30 @@ namespace TRock.Music.Grooveshark
                         Trace.WriteLineIf(task.IsCanceled, "Player-thread was cancelled");
                         Trace.WriteLineIf(task.IsCompleted, "Player-thread completed");
 
+                        if (task.IsCanceled)
+                        {
+                            if (_currentSong.WaveOut != null)
+                            {
+                                _currentSong.WaveOut.Stop();
+                                _currentSong.WaveOut.Dispose();
+                            }
+
+                            if (_currentSong.WaveProvider != null)
+                            {
+                                _currentSong.WaveProvider.ClearBuffer();
+                            }
+                        }
+
                         _currentSong = null;
                         _playerState = PlayerState.Stopped;
                         _isPlaying = false;
 
                         OnIsPlayingChanged(new ValueChangedEventArgs<bool>(false, true));
-                        OnCurrentSongCompleted(new SongEventArgs(((SongData)task.AsyncState).Song));
+
+                        if (task.IsCompleted  && !task.IsCanceled)
+                        {
+                            OnCurrentSongCompleted(new SongEventArgs(((SongData) task.AsyncState).Song));
+                        }
                     });
         }
 
@@ -358,7 +376,7 @@ namespace TRock.Music.Grooveshark
                 {
                     if (songData.Cts.Token.IsCancellationRequested)
                     {
-                        break;
+                        songData.Cts.Token.ThrowIfCancellationRequested();
                     }
 
                     wait.WaitOne(waitTime);
@@ -461,7 +479,7 @@ namespace TRock.Music.Grooveshark
             {
                 if (token.IsCancellationRequested)
                 {
-                    break;
+                    songData.Cts.Token.ThrowIfCancellationRequested();
                 }
 
                 if (songData.WaveOut == null && songData.WaveProvider != null)

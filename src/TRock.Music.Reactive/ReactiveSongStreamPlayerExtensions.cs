@@ -12,19 +12,5 @@ namespace TRock.Music.Reactive
                 handler => player.CurrentStreamChanged += handler,
                 handler => player.CurrentStreamChanged -= handler);
         }
-
-        public static IObservable<EventPattern<SongStreamEventArgs>> ToStreamCompleteObservable(this ISongStreamPlayer player)
-        {
-            return Observable.FromEventPattern<SongStreamEventArgs>(
-                handler => player.StreamComplete += handler,
-                handler => player.StreamComplete -= handler);
-        }
-
-        public static IObservable<EventPattern<SongEventArgs>> ToSongChangedObservable(this ISongStreamPlayer player)
-        {
-            return Observable.FromEventPattern<SongEventArgs>(
-                handler => player.SongChanged += handler,
-                handler => player.SongChanged -= handler);
-        }
     }
 }

@@ -212,8 +212,6 @@ namespace TRock.Music.Torshify.Server
         {
             if (_waveOut != null && _waveOut.PlaybackState != PlaybackState.Stopped)
             {
-                var song = _currentSong;
-
                 _session.PlayerPause();
                 _session.PlayerUnload();
                 _waveOut.Stop();
@@ -222,7 +220,6 @@ namespace TRock.Music.Torshify.Server
                 _currentSongElapsed = TimeSpan.Zero;
 
                 OnIsPlayingChanged(new ValueChangedEventArgs<bool>(true, false));
-                OnCurrentSongCompleted(new SongEventArgs(song));
 
                 _timer.Stop();
             }
@@ -303,7 +300,9 @@ namespace TRock.Music.Torshify.Server
         {
             if (e.Status == Error.OK)
             {
+                var currentSong = _currentSong;
                 Stop();
+                OnCurrentSongCompleted(new SongEventArgs(currentSong));
             }
         }
 

@@ -9,28 +9,18 @@ namespace TRock.Music
     {
         #region Fields
 
-        protected readonly object _lockObject = new object();
-        protected readonly ConcurrentQueue<Song> _songQueue;
-        protected ISongStream _currentStream;
+        private ConcurrentQueue<Song> _currentSongQueue;
+        private ISongStream _currentStream;
 
         #endregion Fields
-
-        #region Constructors
-
-        public SongStreamPlayer()
-        {
-            _songQueue = new ConcurrentQueue<Song>();
-        }
-
-        #endregion Constructors
 
         #region Events
 
         public event EventHandler<SongStreamEventArgs> CurrentStreamChanged;
 
-        public event EventHandler<SongEventArgs> SongChanged;
+        public event EventHandler<SongStreamEventArgs> CurrentStreamCompleted;
 
-        public event EventHandler<SongStreamEventArgs> CurrentStreamComplete;
+        public event EventHandler<SongEventArgs> CurrentSongsChanged;
 
         #endregion Events
 
@@ -38,31 +28,15 @@ namespace TRock.Music
 
         public ISongStream CurrentStream
         {
-            get
-            {
-                lock (_lockObject)
-                {
-                    return _currentStream;
-                }
-            }
+            get { return _currentStream; }
             set
             {
-                lock (_lockObject)
+                if (_currentStream != value)
                 {
-                    Song _;
-                    while (_songQueue.TryDequeue(out _)) { }
-
+                    _currentSongQueue = null;
                     _currentStream = value;
-                    OnCurrentStreamChanged(new SongStreamEventArgs(_currentStream));
+                    OnCurrentStreamChanged(new SongStreamEventArgs(value));
                 }
-            }
-        }
-
-        public IEnumerable<Song> CurrentStreamSongQueue
-        {
-            get
-            {
-                return _songQueue;
             }
         }
 
@@ -70,55 +44,58 @@ namespace TRock.Music
 
         #region Methods
 
-        public bool NextBatch(CancellationToken token)
+        public IEnumerable<Song> CurrentSongs
         {
-            ISongStream stream = CurrentStream;
-
-            if (stream == null)
+            get
             {
-                return false;
+                return _currentSongQueue;
             }
-
-            if (stream.MoveNext(token))
-            {
-                Song _;
-                while (_songQueue.TryDequeue(out _)) { }
-
-                foreach (var song in stream.Current)
-                {
-                    _songQueue.Enqueue(song);
-                }
-
-                return !_songQueue.IsEmpty;
-            }
-
-            return false;
         }
 
-        public bool NextSongInBatch()
+        public bool Next(CancellationToken token)
         {
-            ISongStream stream = CurrentStream;
-
-            if (stream != null && _songQueue.IsEmpty && !NextBatch(CancellationToken.None))
+            if (_currentStream == null)
             {
-                OnCurrentStreamComplete(new SongStreamEventArgs(stream));
-                return false;
+                throw new InvalidOperationException("Please initialize the stream player with a song stream");
             }
 
-            Song upNext;
-            if (_songQueue.TryDequeue(out upNext))
+            if (_currentSongQueue == null)
             {
-                OnSongChanged(new SongEventArgs(upNext));
+                if (CurrentStream.MoveNext(token))
+                {
+                    _currentSongQueue = new ConcurrentQueue<Song>(CurrentStream.Current);
+                }
+                else
+                {
+                    return false;
+                }
+            }
+
+            Song song;
+            if (_currentSongQueue.TryDequeue(out song))
+            {
+                OnCurrentSongsChanged(new SongEventArgs(song));
                 return true;
             }
 
-            return false;
-        }
+            if (_currentStream.MoveNext(token))
+            {
+                _currentSongQueue = new ConcurrentQueue<Song>(_currentStream.Current);
 
-        protected virtual void OnSongChanged(SongEventArgs e)
-        {
-            EventHandler<SongEventArgs> handler = SongChanged;
-            if (handler != null) handler(this, e);
+                if (_currentSongQueue.TryDequeue(out song))
+                {
+                    OnCurrentSongsChanged(new SongEventArgs(song));
+                    return true;
+                }
+
+                OnCurrentStreamCompleted(new SongStreamEventArgs(CurrentStream));
+            }
+            else
+            {
+                OnCurrentStreamCompleted(new SongStreamEventArgs(CurrentStream));
+            }
+
+            return false;
         }
 
         protected virtual void OnCurrentStreamChanged(SongStreamEventArgs e)
@@ -127,9 +104,15 @@ namespace TRock.Music
             if (handler != null) handler(this, e);
         }
 
-        protected virtual void OnCurrentStreamComplete(SongStreamEventArgs e)
+        protected virtual void OnCurrentStreamCompleted(SongStreamEventArgs e)
         {
-            EventHandler<SongStreamEventArgs> handler = CurrentStreamComplete;
+            EventHandler<SongStreamEventArgs> handler = CurrentStreamCompleted;
+            if (handler != null) handler(this, e);
+        }
+
+        protected void OnCurrentSongsChanged(SongEventArgs e)
+        {
+            EventHandler<SongEventArgs> handler = CurrentSongsChanged;
             if (handler != null) handler(this, e);
         }
 

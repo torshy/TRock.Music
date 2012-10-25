@@ -4,7 +4,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
     xmlns:Regions="clr-namespace:Microsoft.Practices.Prism.Regions;assembly=Microsoft.Practices.Prism"
-    Title="TROck Music Client"
+    xmlns:Client="clr-namespace:TRock.Music.Client" Title="TROck Music Client"
     ShowTitleBar="False"
     Height="350"
     Width="525"
@@ -17,6 +17,9 @@
             <Button
                 Content="Playlist"
                 Click="Button_Click_1"/>
+            <Button
+                Content="Next song"
+                Command="{x:Static Client:AppCommands.NextCommand}" />
         </Controls:WindowCommands>
     </Controls:MetroWindow.WindowCommands>
     <Controls:MetroWindow.Flyouts>

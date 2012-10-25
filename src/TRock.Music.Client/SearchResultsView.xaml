@@ -53,6 +53,7 @@
             <TabItem
                 Header="Songs">
                 <DataGrid
+                    Name="SongDataGrid"
                     AutoGenerateColumns="False"
                     ItemsSource="{Binding Songs}"
                     IsReadOnly="True">
@@ -65,7 +66,7 @@
                                     <Button
                                         Content="Play"
                                         Command="{x:Static Client:AppCommands.PlayCommand}"
-                                        CommandParameter="{Binding}" />
+                                        CommandParameter="{Binding SelectedItems, ElementName=SongDataGrid}" />
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>

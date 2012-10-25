@@ -10,9 +10,9 @@ namespace TRock.Music
 
         event EventHandler<SongStreamEventArgs> CurrentStreamChanged;
 
-        event EventHandler<SongStreamEventArgs> CurrentStreamComplete;
+        event EventHandler<SongStreamEventArgs> CurrentStreamCompleted;
 
-        event EventHandler<SongEventArgs> SongChanged;
+        event EventHandler<SongEventArgs> CurrentSongsChanged;
 
         #endregion Events
 
@@ -24,7 +24,7 @@ namespace TRock.Music
             set;
         }
 
-        IEnumerable<Song> CurrentStreamSongQueue
+        IEnumerable<Song> CurrentSongs
         {
             get;
         }
@@ -33,9 +33,7 @@ namespace TRock.Music
 
         #region Methods
 
-        bool NextBatch(CancellationToken token);
-
-        bool NextSongInBatch();
+        bool Next(CancellationToken token);
 
         #endregion Methods
     }

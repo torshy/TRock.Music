@@ -27,7 +27,7 @@ namespace TRock.Music.Client
             Container.RegisterType<IGroovesharkClient, GroovesharkClientWrapper>(new ContainerControlledLifetimeManager(), new InjectionMethod("Connect"));
             Container.RegisterType<ISongProvider, GroovesharkSongProvider>(GroovesharkSongProvider.ProviderName, new ContainerControlledLifetimeManager());
             Container.RegisterType<ISongPlayer, GroovesharkSongPlayer>(new ContainerControlledLifetimeManager());
-            Container.RegisterType<ISongStreamPlayer, AutoplaySongStreamPlayer>(new ContainerControlledLifetimeManager());
+            Container.RegisterType<ISongStreamPlayer, SongStreamPlayer>(new ContainerControlledLifetimeManager());
             Container.RegisterType<ISongProvider>(new InjectionFactory(c => new CachedSongProvider(Container.Resolve<ISongProvider>(GroovesharkSongProvider.ProviderName))));
             Container.RegisterType<object, SearchView>(typeof(SearchView).Name);
             Container.RegisterType<SearchViewModel>();

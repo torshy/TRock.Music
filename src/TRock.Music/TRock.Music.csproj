@@ -44,7 +44,6 @@
     <Compile Include="Album.cs" />
     <Compile Include="Artist.cs" />
     <Compile Include="ArtistAlbum.cs" />
-    <Compile Include="AutoplaySongStreamPlayer.cs" />
     <Compile Include="CachedSongProvider.cs" />
     <Compile Include="IQueue.cs" />
     <Compile Include="ISongPlayer.cs" />
@@ -54,13 +53,15 @@
     <Compile Include="MultiSongStream.cs" />
     <Compile Include="QueueEventArgs.cs" />
     <Compile Include="IVoteableQueue.cs" />
+    <Compile Include="QueueExtensions.cs" />
     <Compile Include="QueueItem.cs" />
-    <Compile Include="SingleSongStream.cs" />
+    <Compile Include="SingleSongStream.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Song.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SongEventArgs.cs" />
     <Compile Include="SongStreamEventArgs.cs" />
-    <Compile Include="SongStreamPlayer.cs" />
     <Compile Include="ValueChangedEventArgs.cs" />
     <Compile Include="ValueProgressEventArgs.cs" />
     <Compile Include="VoteableQueue.cs" />
