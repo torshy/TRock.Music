@@ -16,11 +16,13 @@ namespace TRock.Music
 
         #region Events
 
+        public event EventHandler<SongsEventArgs> CurrentSongsChanged;
+
         public event EventHandler<SongStreamEventArgs> CurrentStreamChanged;
 
         public event EventHandler<SongStreamEventArgs> CurrentStreamCompleted;
 
-        public event EventHandler<SongEventArgs> CurrentSongsChanged;
+        public event EventHandler<SongEventArgs> NextSong;
 
         #endregion Events
 
@@ -40,10 +42,6 @@ namespace TRock.Music
             }
         }
 
-        #endregion Properties
-
-        #region Methods
-
         public IEnumerable<Song> CurrentSongs
         {
             get
@@ -51,6 +49,10 @@ namespace TRock.Music
                 return _currentSongQueue;
             }
         }
+
+        #endregion Properties
+
+        #region Methods
 
         public bool Next(CancellationToken token)
         {
@@ -64,6 +66,7 @@ namespace TRock.Music
                 if (CurrentStream.MoveNext(token))
                 {
                     _currentSongQueue = new ConcurrentQueue<Song>(CurrentStream.Current);
+                    OnCurrentSongsChanged(new SongsEventArgs(_currentSongQueue.ToArray()));
                 }
                 else
                 {
@@ -74,17 +77,18 @@ namespace TRock.Music
             Song song;
             if (_currentSongQueue.TryDequeue(out song))
             {
-                OnCurrentSongsChanged(new SongEventArgs(song));
+                OnNextSong(new SongEventArgs(song));
                 return true;
             }
 
             if (_currentStream.MoveNext(token))
             {
                 _currentSongQueue = new ConcurrentQueue<Song>(_currentStream.Current);
+                OnCurrentSongsChanged(new SongsEventArgs(_currentSongQueue.ToArray()));
 
                 if (_currentSongQueue.TryDequeue(out song))
                 {
-                    OnCurrentSongsChanged(new SongEventArgs(song));
+                    OnNextSong(new SongEventArgs(song));
                     return true;
                 }
 
@@ -96,6 +100,12 @@ namespace TRock.Music
             }
 
             return false;
+        }
+
+        protected void OnNextSong(SongEventArgs e)
+        {
+            EventHandler<SongEventArgs> handler = NextSong;
+            if (handler != null) handler(this, e);
         }
 
         protected virtual void OnCurrentStreamChanged(SongStreamEventArgs e)
@@ -110,9 +120,9 @@ namespace TRock.Music
             if (handler != null) handler(this, e);
         }
 
-        protected void OnCurrentSongsChanged(SongEventArgs e)
+        protected void OnCurrentSongsChanged(SongsEventArgs e)
         {
-            EventHandler<SongEventArgs> handler = CurrentSongsChanged;
+            EventHandler<SongsEventArgs> handler = CurrentSongsChanged;
             if (handler != null) handler(this, e);
         }
 

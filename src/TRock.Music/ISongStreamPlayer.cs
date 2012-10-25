@@ -12,7 +12,9 @@ namespace TRock.Music
 
         event EventHandler<SongStreamEventArgs> CurrentStreamCompleted;
 
-        event EventHandler<SongEventArgs> CurrentSongsChanged;
+        event EventHandler<SongsEventArgs> CurrentSongsChanged;
+
+        event EventHandler<SongEventArgs> NextSong;
 
         #endregion Events
 

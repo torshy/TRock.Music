@@ -1,4 +1,3 @@
-using System;
 using System.Collections;
 using System.Linq;
 using System.Threading;
@@ -35,7 +34,7 @@ namespace TRock.Music.Client
             _queue.ItemAdded += QueueOnItemAdded;
 
             _streamPlayer = streamPlayer;
-            _streamPlayer.CurrentSongsChanged += StreamPlayerOnCurrentSongsChanged;
+            _streamPlayer.NextSong += StreamPlayerNextSongChanged;
 
             _songPlayer = songPlayer;
             _songPlayer.CurrentSongCompleted += SongPlayerOnCurrentSongCompleted;
@@ -67,7 +66,7 @@ namespace TRock.Music.Client
             }
         }
 
-        private void StreamPlayerOnCurrentSongsChanged(object sender, SongEventArgs eventArgs)
+        private void StreamPlayerNextSongChanged(object sender, SongEventArgs eventArgs)
         {
             _songPlayer.Start(eventArgs.Song);
         }
