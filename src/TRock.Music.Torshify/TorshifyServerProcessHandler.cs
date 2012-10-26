@@ -77,6 +77,12 @@ namespace TRock.Music.Torshify
             set;
         }
 
+        public bool AutostartIfCrashed
+        {
+            get; 
+            set;
+        }
+
         #endregion Properties
 
         #region Methods
@@ -123,7 +129,7 @@ namespace TRock.Music.Torshify
 
             Process torshify = Process.Start(TorshifyServerLocation, credentials);
 
-            if (torshify != null)
+            if (torshify != null && AutostartIfCrashed)
             {
                 torshify.Exited += (sender, args) =>
                 {

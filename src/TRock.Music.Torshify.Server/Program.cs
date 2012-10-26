@@ -36,8 +36,6 @@ namespace TRock.Music.Torshify.Server
         {
             EnsureProcessIsViableSpotifyHost();
 
-            SpotifyLibExtractor.ExtractResourceToFile("TRock.Music.Torshify.Server.libspotify.dll", "libspotify.dll");
-
             Trace.Listeners.Add(new ConsoleTraceListener());
 
             string username = string.Empty;
@@ -56,7 +54,11 @@ namespace TRock.Music.Torshify.Server
                 { "sf|settingsfolder=", v => settingsFolder = v },
                 { "ua|useragent=", v => userAgent = v },
                 { "hidden", v => hidden = v != null },
-                { "port", v => int.TryParse(v, out port)}
+                { "port=", v =>
+                {
+                    if(v != null) 
+                        int.TryParse(v, out port);
+                }}
             }.Parse(args);
 
             if (hidden)
@@ -99,23 +101,37 @@ namespace TRock.Music.Torshify.Server
 
             GlobalHost.DependencyResolver.Register(typeof(ISongPlayer), () => player);
 
-            var server = new SignalR.Hosting.Self.Server("http://localhost:" + port + "/");
-            server.MapHubs();
-            server.Start();
+            var signalRUrl = "http://localhost:" + port + "/";
+            var nancyFxUrl = "http://localhost:" + (port + 1) + "/torshify/";
+            try
+            {
+                Console.WriteLine("SignalR URL: " + signalRUrl);
+                Console.WriteLine("NancyFX URL: " + nancyFxUrl);
 
-            var hub = GlobalHost.ConnectionManager.GetHubContext<TorshifyHub>();
+                var server = new SignalR.Hosting.Self.Server(signalRUrl);
+                server.MapHubs();
+                server.Start();
 
-            player.IsPlayingChanged += (sender, eventArgs) => hub.Clients.IsPlayingChanged(eventArgs);
-            player.IsMutedChanged += (sender, eventArgs) => hub.Clients.IsMutedChanged(eventArgs);
-            player.Buffering += (sender, eventArgs) => hub.Clients.Buffering(eventArgs);
-            player.Progress += (sender, eventArgs) => hub.Clients.Progress(eventArgs);
-            player.CurrentSongChanged += (sender, eventArgs) => hub.Clients.CurrentSongChanged(eventArgs);
-            player.CurrentSongCompleted += (sender, eventArgs) => hub.Clients.CurrentSongCompleted(eventArgs);
-            player.VolumeChanged += (sender, eventArgs) => hub.Clients.VolumeChanged(eventArgs);
+                var hub = GlobalHost.ConnectionManager.GetHubContext<TorshifyHub>();
 
-            var bootstrapper = new NancyBootstrapper(session);
-            var nancyHost = new NancyHost(new Uri("http://localhost:" + (port + 1) + "/torshify/"), bootstrapper);
-            nancyHost.Start();
+                player.IsPlayingChanged += (sender, eventArgs) => hub.Clients.IsPlayingChanged(eventArgs);
+                player.IsMutedChanged += (sender, eventArgs) => hub.Clients.IsMutedChanged(eventArgs);
+                player.Buffering += (sender, eventArgs) => hub.Clients.Buffering(eventArgs);
+                player.Progress += (sender, eventArgs) => hub.Clients.Progress(eventArgs);
+                player.CurrentSongChanged += (sender, eventArgs) => hub.Clients.CurrentSongChanged(eventArgs);
+                player.CurrentSongCompleted += (sender, eventArgs) => hub.Clients.CurrentSongCompleted(eventArgs);
+                player.VolumeChanged += (sender, eventArgs) => hub.Clients.VolumeChanged(eventArgs);
+
+                var bootstrapper = new NancyBootstrapper(session);
+
+                var nancyHost = new NancyHost(new Uri(nancyFxUrl), bootstrapper);
+                nancyHost.Start();
+            }
+            catch (Exception e)
+            {
+
+                Console.Error.WriteLine(e);
+            }
 
             Console.ReadLine();
         }
