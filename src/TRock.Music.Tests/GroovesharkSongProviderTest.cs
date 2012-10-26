@@ -21,7 +21,7 @@ namespace TRock.Music.Tests
         {
             var client = new GroovesharkClientWrapper();
             client.Connect();
-            _provider = new GroovesharkSongProvider(client);
+            _provider = new GroovesharkSongProvider(new Lazy<IGroovesharkClient>(() => client));
         }
 
         #endregion Constructors
@@ -63,7 +63,7 @@ namespace TRock.Music.Tests
         {
             var song = _provider.GetSongs("NOFX", CancellationToken.None).Result.FirstOrDefault();
             var result = _provider.GetAlbum(song.Album.Id, CancellationToken.None).Result;
-            
+
             Assert.NotNull(result);
             Assert.NotEmpty(result.Songs);
         }

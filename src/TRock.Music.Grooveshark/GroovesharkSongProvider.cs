@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -12,13 +13,13 @@ namespace TRock.Music.Grooveshark
 
         public const string ProviderName = "Grooveshark";
 
-        private readonly IGroovesharkClient _client;
+        private readonly Lazy<IGroovesharkClient> _client;
 
         #endregion Fields
 
         #region Constructors
 
-        public GroovesharkSongProvider(IGroovesharkClient client)
+        public GroovesharkSongProvider(Lazy<IGroovesharkClient> client)
         {
             _client = client;
         }
@@ -43,7 +44,7 @@ namespace TRock.Music.Grooveshark
         {
             return Task.Factory.StartNew(() =>
             {
-                var response = _client.SearchArtist(query);
+                var response = _client.Value.SearchArtist(query);
                 return ConvertToSongs(response.result.result);
             }, cancellationToken);
         }
@@ -56,7 +57,7 @@ namespace TRock.Music.Grooveshark
 
                 if (int.TryParse(artistId, out artistIdAsInt))
                 {
-                    var response = _client.GetSongsByArtist(artistIdAsInt);
+                    var response = _client.Value.GetSongsByArtist(artistIdAsInt);
                     var songs = response.result.songs.Select(ConvertToSong);
                     var albums = songs.GroupBy(s => new
                     {
@@ -85,7 +86,7 @@ namespace TRock.Music.Grooveshark
 
                 if (int.TryParse(albumId, out albumIdAsInt))
                 {
-                    var response = _client.GetSongsByAlbum(albumIdAsInt);
+                    var response = _client.Value.GetSongsByAlbum(albumIdAsInt);
                     var songs = ConvertToSongs(response.result.songs).ToArray();
                     var firstSong = songs.FirstOrDefault();
 
@@ -123,7 +124,7 @@ namespace TRock.Music.Grooveshark
 
                 if (int.TryParse(artistId, out artistIdAsInt))
                 {
-                    var response = _client.GetSongsByArtist(artistIdAsInt);
+                    var response = _client.Value.GetSongsByArtist(artistIdAsInt);
                     var songs = ConvertToSongs(response.result.songs).ToArray();
                     var firstSong = songs.FirstOrDefault();
 

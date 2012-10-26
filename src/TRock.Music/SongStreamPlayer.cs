@@ -58,7 +58,7 @@ namespace TRock.Music
         {
             if (_currentStream == null)
             {
-                throw new InvalidOperationException("Please initialize the stream player with a song stream");
+                return false;
             }
 
             if (_currentSongQueue == null)

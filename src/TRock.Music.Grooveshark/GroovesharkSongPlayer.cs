@@ -14,7 +14,7 @@ namespace TRock.Music.Grooveshark
     {
         #region Fields
 
-        private readonly IGroovesharkClient _groove;
+        private readonly Lazy<IGroovesharkClient> _groove;
         private readonly object _lockObject = new object();
 
         private bool _bufferingComplete;
@@ -28,7 +28,7 @@ namespace TRock.Music.Grooveshark
 
         #region Constructors
 
-        public GroovesharkSongPlayer(IGroovesharkClient groove)
+        public GroovesharkSongPlayer(Lazy<IGroovesharkClient> groove)
         {
             _groove = groove;
             _volume = 0.5f;
@@ -196,7 +196,7 @@ namespace TRock.Music.Grooveshark
                     {
                         if (song.TotalSeconds == 0)
                         {
-                            var streamKey = _groove.GetStreamKey(songId);
+                            var streamKey = _groove.Value.GetStreamKey(songId);
                             double durationInMicroseconds;
 
                             if (double.TryParse(streamKey.uSecs, out durationInMicroseconds))
@@ -206,7 +206,7 @@ namespace TRock.Music.Grooveshark
                         }
 
                         var bufferPeriod = TimeSpan.FromSeconds(song.TotalSeconds);
-                        var stream = _groove.GetMusicStream(songId, artistId);
+                        var stream = _groove.Value.GetMusicStream(songId, artistId);
 
                         return Tuple.Create(stream.Stream, stream.Length, bufferPeriod);
                     })
