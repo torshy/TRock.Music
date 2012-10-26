@@ -89,15 +89,29 @@ namespace TRock.Music.Client
         {
             if (argument is Song)
             {
-                _queue.Enqueue(new SingleSongStream(((Song) argument)));
+                var song = (Song)argument;
+                
+                _queue.Enqueue(new SingleSongStream(song)
+                {
+                    Name = song.Name, 
+                    Description = song.Artist.Name
+                });
             }
             else if (argument is IEnumerable)
             {
-                var songs = ((IEnumerable) argument).OfType<Song>().ToArray();
+                var songs = ((IEnumerable)argument).OfType<Song>().ToArray();
 
-                if (songs.Length > 0)
+                if (songs.Length == 1)
                 {
-                    _queue.Enqueue(new MultiSongStream(songs));
+                    ExecutePlay(songs[0]);
+                }
+                else if (songs.Length > 1)
+                {
+                    _queue.Enqueue(new MultiSongStream(songs)
+                    {
+                        Name = songs[0].Artist.Name,
+                        Description = "Various"
+                    });
                 }
             }
         }

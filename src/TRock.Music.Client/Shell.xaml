@@ -29,7 +29,7 @@
             Position="Right">
             <ListBox
                 x:Name="_playlist" 
-                DisplayMemberPath="Name" />
+                DisplayMemberPath="Item.Name" />
         </Controls:Flyout>
     </Controls:MetroWindow.Flyouts>
     <Grid>

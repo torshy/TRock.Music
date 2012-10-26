@@ -1,3 +1,4 @@
+using System;
 using System.Threading;
 
 using NSubstitute;
@@ -33,7 +34,7 @@ namespace TRock.Music.Tests
             player.Players.Add(subPlayer1);
             player.Players.Add(subPlayer2);
             player.Players.Add(subPlayer3);
-            
+
             var receivedBuffering = false;
             player.Buffering += (sender, args) => receivedBuffering = true;
 
@@ -50,11 +51,11 @@ namespace TRock.Music.Tests
             groove.Connect();
 
             var provider = new AggregateSongProvider();
-            provider.Providers.Add(new GroovesharkSongProvider(groove));
+            provider.Providers.Add(new GroovesharkSongProvider(new Lazy<IGroovesharkClient>(() => groove)));
             provider.Providers.Add(new SpotifySongProvider(new DefaultSpotifyImageProvider()));
 
             var player = new AggregateSongPlayer();
-            player.Players.Add(new GroovesharkSongPlayer(groove));
+            player.Players.Add(new GroovesharkSongPlayer(new Lazy<IGroovesharkClient>(() => groove)));
 
             var song = provider.GetSongs("NOFX", CancellationToken.None).Result.FirstOrDefault();
 

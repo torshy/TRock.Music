@@ -4,15 +4,23 @@ namespace TRock.Music.Client
 {
     public partial class Shell
     {
-        public Shell(ISongStreamPlayer player)
+        public Shell(IVoteableQueue<ISongStream> queue)
         {
             InitializeComponent();
 
-            player.CurrentSongsChanged += (sender, args) =>
+            queue.ItemAdded += (sender, args) =>
             {
                 _playlist.Dispatcher.BeginInvoke(new Action(() =>
                 {
-                    _playlist.ItemsSource = args.Songs;
+                    _playlist.ItemsSource = queue.CurrentQueue;
+                }));
+            };
+
+            queue.ItemRemoved += (sender, args) =>
+            {
+                _playlist.Dispatcher.BeginInvoke(new Action(() =>
+                {
+                    _playlist.ItemsSource = queue.CurrentQueue;
                 }));
             };
         }
