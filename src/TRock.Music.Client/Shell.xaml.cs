@@ -1,4 +1,6 @@
-﻿namespace TRock.Music.Client
+﻿using System;
+
+namespace TRock.Music.Client
 {
     public partial class Shell
     {
@@ -8,7 +10,10 @@
 
             player.CurrentSongsChanged += (sender, args) =>
             {
-                _playlist.ItemsSource = args.Songs;
+                _playlist.Dispatcher.BeginInvoke(new Action(() =>
+                {
+                    _playlist.ItemsSource = args.Songs;
+                }));
             };
         }
 
