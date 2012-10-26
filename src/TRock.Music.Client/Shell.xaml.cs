@@ -2,9 +2,14 @@
 {
     public partial class Shell
     {
-        public Shell()
+        public Shell(ISongStreamPlayer player)
         {
             InitializeComponent();
+
+            player.CurrentSongsChanged += (sender, args) =>
+            {
+                _playlist.ItemsSource = args.Songs;
+            };
         }
 
         private void Button_Click_1(object sender, System.Windows.RoutedEventArgs e)

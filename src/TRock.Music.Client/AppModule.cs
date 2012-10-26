@@ -112,6 +112,10 @@ namespace TRock.Music.Client
                     _streamPlayer.CurrentStream = item.Item;
                     _streamPlayer.Next(CancellationToken.None);
                 }
+                else
+                {
+                    _songPlayer.Stop();
+                }
             }
         }
 

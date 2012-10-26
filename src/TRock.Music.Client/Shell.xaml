@@ -27,7 +27,9 @@
             x:Name="_playlistFlyout"
             Header="Playlist"
             Position="Right">
-            
+            <ListBox
+                x:Name="_playlist" 
+                DisplayMemberPath="Name" />
         </Controls:Flyout>
     </Controls:MetroWindow.Flyouts>
     <Grid>

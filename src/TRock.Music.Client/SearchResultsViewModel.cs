@@ -1,8 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Data;
@@ -11,7 +10,6 @@ using System.Windows.Input;
 using Microsoft.Practices.Prism.Commands;
 using Microsoft.Practices.Prism.Regions;
 using Microsoft.Practices.Prism.ViewModel;
-using System.Linq;
 
 namespace TRock.Music.Client
 {
@@ -19,11 +17,11 @@ namespace TRock.Music.Client
     {
         #region Fields
 
+        private readonly ObservableCollection<ArtistAlbum> _albums;
+        private readonly ObservableCollection<ArtistAlbum> _artists;
         private readonly CancellationTokenSource _cts;
         private readonly ISongProvider _songProvider;
         private readonly ObservableCollection<Song> _songs;
-        private readonly ObservableCollection<ArtistAlbum> _albums;
-        private readonly ObservableCollection<ArtistAlbum> _artists;
 
         private bool _isSearching;
 
@@ -121,7 +119,7 @@ namespace TRock.Music.Client
                         {
                             _albums.Add(new ArtistAlbum
                             {
-                                Album = album.Key, 
+                                Album = album.Key,
                                 Artist = album.First().Artist,
                                 Songs = album.ToArray()
                             });

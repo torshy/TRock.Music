@@ -78,6 +78,7 @@ namespace TRock.Music
             if (_currentSongQueue.TryDequeue(out song))
             {
                 OnNextSong(new SongEventArgs(song));
+                OnCurrentSongsChanged(new SongsEventArgs(_currentSongQueue.ToArray()));
                 return true;
             }
 
@@ -89,6 +90,7 @@ namespace TRock.Music
                 if (_currentSongQueue.TryDequeue(out song))
                 {
                     OnNextSong(new SongEventArgs(song));
+                    OnCurrentSongsChanged(new SongsEventArgs(_currentSongQueue.ToArray()));
                     return true;
                 }
 
