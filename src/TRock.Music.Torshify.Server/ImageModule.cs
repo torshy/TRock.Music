@@ -1,4 +1,7 @@
+using System;
+using System.Diagnostics;
 using System.IO;
+using System.Reflection;
 using Nancy;
 using Nancy.Responses;
 using Torshify;
@@ -11,19 +14,37 @@ namespace TRock.Music.Torshify.Server
         {
             Get["/album/cover/{id}"] = o =>
             {
-                using (var link = session.FromLink<IAlbum>((string)o.id))
+                try
                 {
-                    using (var album = link.Object)
+                    using (var link = session.FromLink<IAlbum>((string)o.id))
                     {
-                        album.WaitUntilLoaded(2000);
-
-                        using (var image = session.GetImage(album.CoverId))
+                        using (var album = link.Object)
                         {
-                            image.WaitUntilLoaded(2000);
-                            var memoryStream = new MemoryStream(image.Data);
-                            return new StreamResponse(() => memoryStream, "image/jpeg");
+                            album.WaitUntilLoaded(2000);
+
+                            if (album.IsLoaded)
+                            {
+                                using (var image = session.GetImage(album.CoverId))
+                                {
+                                    image.WaitUntilLoaded(2000);
+                                    var memoryStream = new MemoryStream(image.Data);
+                                    return new StreamResponse(() => memoryStream, "image/jpeg");
+                                }
+                            }
                         }
                     }
+                }
+                catch (Exception e)
+                {
+                    Trace.WriteLine(e);
+                }
+
+                using (var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream("TRock.Music.Torshify.Server.cover.jpg"))
+                {
+                    var memoryStream = new MemoryStream();
+                    stream.CopyTo(memoryStream);
+                    memoryStream.Position = 0;
+                    return new StreamResponse(() => memoryStream, "image/jpeg");
                 }
             };
         }
