@@ -45,6 +45,7 @@ namespace TRock.Music.Torshify.Server
             string userAgent = Constants.UserAgent;
             bool hidden = false;
             int port = 8081;
+            int loginTimeout = 50000;
 
             new OptionSet
             {
@@ -58,6 +59,11 @@ namespace TRock.Music.Torshify.Server
                 {
                     if(v != null) 
                         int.TryParse(v, out port);
+                }},
+                { "logintimeout=", v =>
+                {
+                    if(v != null) 
+                        int.TryParse(v, out loginTimeout);
                 }}
             }.Parse(args);
 
@@ -91,7 +97,7 @@ namespace TRock.Music.Torshify.Server
 
             session.Login(username, password);
 
-            if (!wait.WaitOne(5000))
+            if (!wait.WaitOne(loginTimeout))
             {
                 Trace.WriteLine("Timed out");
                 Environment.Exit(-1);
