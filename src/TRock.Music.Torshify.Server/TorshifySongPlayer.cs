@@ -168,13 +168,27 @@ namespace TRock.Music.Torshify.Server
                 {
                     if (track.WaitUntilLoaded(2000))
                     {
-                        _session.PlayerLoad(track);
-                        _session.PlayerPlay();
-                        _currentSong = song;
-                        _currentSong.TotalSeconds = (int)track.Duration.TotalSeconds;
+                        if (_session.PlayerLoad(track) == Error.OK)
+                        {
+                            if (_session.PlayerPlay() == Error.OK)
+                            {
+                                _currentSong = song;
+                                _currentSong.TotalSeconds = (int) track.Duration.TotalSeconds;
 
-                        OnCurrentSongChanged(new ValueChangedEventArgs<Song>(oldSong, song));
-                        OnBuffering(new ValueProgressEventArgs<int>(100, 100));
+                                OnCurrentSongChanged(new ValueChangedEventArgs<Song>(oldSong, song));
+                                OnBuffering(new ValueProgressEventArgs<int>(100, 100));
+                            }
+                            else
+                            {
+                                OnCurrentSongChanged(new ValueChangedEventArgs<Song>(oldSong, song));
+                                OnCurrentSongCompleted(new SongEventArgs(song));
+                            }
+                        }
+                        else
+                        {
+                            OnCurrentSongChanged(new ValueChangedEventArgs<Song>(oldSong, song));
+                            OnCurrentSongCompleted(new SongEventArgs(song));
+                        }
                     }
                     else
                     {
@@ -219,9 +233,9 @@ namespace TRock.Music.Torshify.Server
                 _currentSong = null;
                 _currentSongElapsed = TimeSpan.Zero;
 
-                OnIsPlayingChanged(new ValueChangedEventArgs<bool>(true, false));
-
                 _timer.Stop();
+
+                OnIsPlayingChanged(new ValueChangedEventArgs<bool>(true, false));
             }
         }
 
@@ -320,6 +334,7 @@ namespace TRock.Music.Torshify.Server
                     _waveOut.Init(_waveProvider);
                     _waveOut.Play();
                     _timer.Start();
+                    OnIsPlayingChanged(new ValueChangedEventArgs<bool>(false, true));
                 }
 
                 if ((_waveProvider.BufferLength - _waveProvider.BufferedBytes) > e.Samples.Length)
