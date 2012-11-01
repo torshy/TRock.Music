@@ -51,15 +51,16 @@ namespace TRock.Music
         {
             return Task.Factory.StartNew(() =>
             {
-                var songs = new ConcurrentBag<Song>();
+                var lockObject = new object();
+                var songs = new List<Song>(200);
 
                 Parallel.ForEach(Providers, p =>
                 {
                     var result = p.GetSongs(query, cancellationToken).Result;
 
-                    foreach (var song in result)
+                    lock (lockObject)
                     {
-                        songs.Add(song);
+                        songs.AddRange(result);
                     }
                 });
 
