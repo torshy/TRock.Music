@@ -1,4 +1,4 @@
-using System.Collections.Concurrent;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -43,6 +43,12 @@ namespace TRock.Music
             private set;
         }
 
+        public bool HandleExceptions
+        {
+            get; 
+            set;
+        }
+
         #endregion Properties
 
         #region Methods
@@ -56,11 +62,21 @@ namespace TRock.Music
 
                 Parallel.ForEach(Providers, p =>
                 {
-                    var result = p.GetSongs(query, cancellationToken).Result;
-
-                    lock (lockObject)
+                    try
                     {
-                        songs.AddRange(result);
+                        var result = p.GetSongs(query, cancellationToken).Result;
+
+                        lock (lockObject)
+                        {
+                            songs.AddRange(result);
+                        }
+                    }
+                    catch(Exception)
+                    {
+                        if (!HandleExceptions)
+                        {
+                            throw;
+                        }
                     }
                 });
 
@@ -76,10 +92,7 @@ namespace TRock.Music
 
                 foreach (Task<IEnumerable<Album>> task in tasks)
                 {
-                    foreach (Album album in task.Result)
-                    {
-                        albums.Add(album);
-                    }
+                    albums.AddRange(task.Result);
                 }
 
                 return (IEnumerable<Album>)albums;
@@ -94,11 +107,21 @@ namespace TRock.Music
 
                 Parallel.ForEach(Providers, p =>
                 {
-                    var album = p.GetAlbum(albumId, cancellationToken).Result;
-
-                    if (album != null)
+                    try
                     {
-                        result = album;
+                        var album = p.GetAlbum(albumId, cancellationToken).Result;
+
+                        if (album != null)
+                        {
+                            result = album;
+                        }
+                    }
+                    catch (Exception)
+                    {
+                        if (!HandleExceptions)
+                        {
+                            throw;
+                        }
                     }
                 });
 
@@ -114,11 +137,21 @@ namespace TRock.Music
 
                 Parallel.ForEach(Providers, p =>
                 {
-                    var artist = p.GetArtist(artistId, cancellationToken).Result;
-
-                    if (artist != null)
+                    try
                     {
-                        result = artist;
+                        var artist = p.GetArtist(artistId, cancellationToken).Result;
+
+                        if (artist != null)
+                        {
+                            result = artist;
+                        }
+                    }
+                    catch (Exception)
+                    {
+                        if (!HandleExceptions)
+                        {
+                            throw;
+                        }
                     }
                 });
 
