@@ -46,8 +46,7 @@
       <Private>False</Private>
     </Reference>
     <Reference Include="NAudio">
-      <HintPath>..\..\packages\NAudio.1.5.5-beta\lib\net20\NAudio.dll</HintPath>
-      <Private>False</Private>
+      <HintPath>..\..\packages\NAudio.1.6\lib\net20\NAudio.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json">
       <HintPath>..\..\packages\Newtonsoft.Json.4.5.10\lib\net40\Newtonsoft.Json.dll</HintPath>
@@ -116,11 +115,6 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="..\..\packages\NAudio.1.5.5-beta\lib\net20\NAudio.dll">
-      <Link>Libs\NAudio.dll</Link>
-    </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
     <EmbeddedResource Include="..\..\packages\Nancy.0.12.1\lib\net40\Nancy.dll">
       <Link>Libs\Nancy.dll</Link>
     </EmbeddedResource>
@@ -153,6 +147,11 @@
   <ItemGroup>
     <EmbeddedResource Include="..\..\lib\Torshify\Torshify.dll">
       <Link>Libs\Torshify.dll</Link>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="..\..\packages\NAudio.1.6\lib\net20\NAudio.dll">
+      <Link>Libs\NAudio.dll</Link>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -691,9 +691,24 @@
             PKEY_AudioEndpoint_FullRangeSpeakers 
             </summary>
         </member>
+        <member name="F:NAudio.CoreAudioApi.PropertyKeys.PKEY_AudioEndpoint_Supports_EventDriven_Mode">
+            <summary>
+            PKEY_AudioEndpoint_Supports_EventDriven_Mode 
+            </summary>
+        </member>
+        <member name="F:NAudio.CoreAudioApi.PropertyKeys.PKEY_AudioEndpoint_JackSubType">
+            <summary>
+            PKEY_AudioEndpoint_JackSubType
+            </summary>
+        </member>
         <member name="F:NAudio.CoreAudioApi.PropertyKeys.PKEY_AudioEngine_DeviceFormat">
             <summary>
             PKEY_AudioEngine_DeviceFormat 
+            </summary>
+        </member>
+        <member name="F:NAudio.CoreAudioApi.PropertyKeys.PKEY_AudioEngine_OEMFormat">
+            <summary>
+            PKEY_AudioEngine_OEMFormat
             </summary>
         </member>
         <member name="F:NAudio.CoreAudioApi.PropertyKeys.PKEY_Device_FriendlyName">
@@ -1057,6 +1072,68 @@
             The WaveFormat of this SampleProvider
             </summary>
         </member>
+        <member name="T:NAudio.Wave.SampleProviders.Pcm32BitToSampleProvider">
+            <summary>
+            Converts an IWaveProvider containing 32 bit PCM to an
+            ISampleProvider
+            </summary>
+        </member>
+        <member name="T:NAudio.Wave.SampleProviders.SampleProviderConverterBase">
+            <summary>
+            Helper base class for classes converting to ISampleProvider
+            </summary>
+        </member>
+        <member name="F:NAudio.Wave.SampleProviders.SampleProviderConverterBase.source">
+            <summary>
+            Source Wave Provider
+            </summary>
+        </member>
+        <member name="F:NAudio.Wave.SampleProviders.SampleProviderConverterBase.sourceBuffer">
+            <summary>
+            Source buffer (to avoid constantly creating small buffers during playback)
+            </summary>
+        </member>
+        <member name="M:NAudio.Wave.SampleProviders.SampleProviderConverterBase.#ctor(NAudio.Wave.IWaveProvider)">
+            <summary>
+            Initialises a new instance of SampleProviderConverterBase
+            </summary>
+            <param name="source">Source Wave provider</param>
+        </member>
+        <member name="M:NAudio.Wave.SampleProviders.SampleProviderConverterBase.Read(System.Single[],System.Int32,System.Int32)">
+            <summary>
+            Reads samples from the source wave provider
+            </summary>
+            <param name="buffer">Sample buffer</param>
+            <param name="offset">Offset into sample buffer</param>
+            <param name="count">Number of samples required</param>
+            <returns>Number of samples read</returns>
+        </member>
+        <member name="M:NAudio.Wave.SampleProviders.SampleProviderConverterBase.EnsureSourceBuffer(System.Int32)">
+            <summary>
+            Ensure the source buffer exists and is big enough
+            </summary>
+            <param name="sourceBytesRequired">Bytes required</param>
+        </member>
+        <member name="P:NAudio.Wave.SampleProviders.SampleProviderConverterBase.WaveFormat">
+            <summary>
+            Wave format of this wave provider
+            </summary>
+        </member>
+        <member name="M:NAudio.Wave.SampleProviders.Pcm32BitToSampleProvider.#ctor(NAudio.Wave.IWaveProvider)">
+            <summary>
+            Initialises a new instance of Pcm32BitToSampleProvider
+            </summary>
+            <param name="source">Source Wave Provider</param>
+        </member>
+        <member name="M:NAudio.Wave.SampleProviders.Pcm32BitToSampleProvider.Read(System.Single[],System.Int32,System.Int32)">
+            <summary>
+            Reads floating point samples from this sample provider
+            </summary>
+            <param name="buffer">sample buffer</param>
+            <param name="offset">offset within sample buffer to write to</param>
+            <param name="count">number of samples required</param>
+            <returns>number of samples provided</returns>
+        </member>
         <member name="T:NAudio.Wave.SampleProviders.SampleProviderConverters">
             <summary>
             Utility class for converting to SampleProvider
@@ -1118,6 +1195,23 @@
         <member name="P:NAudio.Wave.SampleProviders.SampleToWaveProvider16.Volume">
             <summary>
             Volume of this channel. 1.0 = full scale
+            </summary>
+        </member>
+        <member name="T:NAudio.Wave.SampleProviders.WaveToSampleProvider64">
+            <summary>
+            Helper class turning an already 64 bit floating point IWaveProvider
+            into an ISampleProvider - hopefully not needed for most applications
+            </summary>
+        </member>
+        <member name="M:NAudio.Wave.SampleProviders.WaveToSampleProvider64.#ctor(NAudio.Wave.IWaveProvider)">
+            <summary>
+            Initializes a new instance of the WaveToSampleProvider class
+            </summary>
+            <param name="source">Source wave provider, must be IEEE float</param>
+        </member>
+        <member name="M:NAudio.Wave.SampleProviders.WaveToSampleProvider64.Read(System.Single[],System.Int32,System.Int32)">
+            <summary>
+            Reads from this provider
             </summary>
         </member>
         <member name="T:NAudio.Wave.WaveInEvent">
@@ -2025,6 +2119,11 @@
             <param name="destOffset">Offset within output buffer</param>
             <returns>Bytes written to output buffer</returns>
         </member>
+        <member name="M:NAudio.Wave.IMp3FrameDecompressor.Reset">
+            <summary>
+            Tell the decoder that we have repositioned
+            </summary>
+        </member>
         <member name="P:NAudio.Wave.IMp3FrameDecompressor.OutputFormat">
             <summary>
             PCM format that we are converting into
@@ -2039,6 +2138,11 @@
         <member name="M:NAudio.FileFormats.Mp3.DmoMp3FrameDecompressor.DecompressFrame(NAudio.Wave.Mp3Frame,System.Byte[],System.Int32)">
             <summary>
             Decompress a single frame of MP3
+            </summary>
+        </member>
+        <member name="M:NAudio.FileFormats.Mp3.DmoMp3FrameDecompressor.Reset">
+            <summary>
+            Alerts us that a reposition has occured so the MP3 decoder needs to reset its state
             </summary>
         </member>
         <member name="M:NAudio.FileFormats.Mp3.DmoMp3FrameDecompressor.Dispose">
@@ -2179,6 +2283,26 @@
             The number of samples in this frame
             </summary>
         </member>
+        <member name="P:NAudio.Wave.Mp3Frame.ChannelExtension">
+            <summary>
+            The channel extension bits
+            </summary>
+        </member>
+        <member name="P:NAudio.Wave.Mp3Frame.BitRateIndex">
+            <summary>
+            The bitrate index (directly from the header)
+            </summary>
+        </member>
+        <member name="P:NAudio.Wave.Mp3Frame.Copyright">
+            <summary>
+            Whether the Copyright bit is set
+            </summary>
+        </member>
+        <member name="P:NAudio.Wave.Mp3Frame.CrcPresent">
+            <summary>
+            Whether a CRC is present
+            </summary>
+        </member>
         <member name="T:NAudio.Wave.AcmMp3FrameDecompressor">
             <summary>
             MP3 Frame Decompressor using ACM
@@ -2199,9 +2323,19 @@
             <param name="destOffset">Offset within destination buffer</param>
             <returns>Bytes written into destination buffer</returns>
         </member>
+        <member name="M:NAudio.Wave.AcmMp3FrameDecompressor.Reset">
+            <summary>
+            Resets the MP3 Frame Decompressor after a reposition operation
+            </summary>
+        </member>
         <member name="M:NAudio.Wave.AcmMp3FrameDecompressor.Dispose">
             <summary>
             Disposes of this MP3 frame decompressor
+            </summary>
+        </member>
+        <member name="M:NAudio.Wave.AcmMp3FrameDecompressor.Finalize">
+            <summary>
+            Finalizer ensuring that resources get released properly
             </summary>
         </member>
         <member name="P:NAudio.Wave.AcmMp3FrameDecompressor.OutputFormat">
@@ -6666,6 +6800,12 @@
             Property ID
             </summary>
         </member>
+        <member name="M:NAudio.CoreAudioApi.PropertyKey.#ctor(System.Guid,System.Int32)">
+            <summary>
+            <param name="formatId"></param>
+            <param name="propertyId"></param>
+            </summary>
+        </member>
         <member name="T:NAudio.CoreAudioApi.Interfaces.PropVariant">
             <summary>
             from Propidl.h.
@@ -6797,11 +6937,11 @@
             Property Store class, only supports reading properties at the moment.
             </summary>
         </member>
-        <member name="M:NAudio.CoreAudioApi.PropertyStore.Contains(System.Guid)">
+        <member name="M:NAudio.CoreAudioApi.PropertyStore.Contains(NAudio.CoreAudioApi.PropertyKey)">
             <summary>
             Contains property guid
             </summary>
-            <param name="guid">Looks for a specific Guid</param>
+            <param name="key">Looks for a specific key</param>
             <returns>True if found</returns>
         </member>
         <member name="M:NAudio.CoreAudioApi.PropertyStore.Get(System.Int32)">
@@ -6836,11 +6976,11 @@
             <param name="index">Property index</param>
             <returns>The property</returns>
         </member>
-        <member name="P:NAudio.CoreAudioApi.PropertyStore.Item(System.Guid)">
+        <member name="P:NAudio.CoreAudioApi.PropertyStore.Item(NAudio.CoreAudioApi.PropertyKey)">
             <summary>
             Indexer by guid
             </summary>
-            <param name="guid">Property guid</param>
+            <param name="key">Property Key</param>
             <returns>Property or null if not found</returns>
         </member>
         <member name="T:NAudio.CoreAudioApi.PropertyStoreProperty">
@@ -8008,6 +8148,11 @@
             </summary>
             <param name="compressedFormat">The compressed format</param>
             <returns>The PCM format</returns>
+        </member>
+        <member name="M:NAudio.Wave.Compression.AcmStream.Reposition">
+            <summary>
+            Report that we have repositioned in the source stream
+            </summary>
         </member>
         <member name="M:NAudio.Wave.Compression.AcmStream.Convert(System.Int32,System.Int32@)">
             <summary>
@@ -10456,7 +10601,7 @@
                 <c>true</c> if ASIO is supported; otherwise, <c>false</c>.
             </returns>
         </member>
-        <member name="M:NAudio.Wave.AsioOut.initFromName(System.String)">
+        <member name="M:NAudio.Wave.AsioOut.InitFromName(System.String)">
             <summary>
             Inits the driver from the asio driver name.
             </summary>
@@ -10526,11 +10671,23 @@
         <member name="P:NAudio.Wave.AsioOut.NumberOfOutputChannels">
             <summary>
             The number of output channels we are currently using for playback
+            (Must be less than or equal to DriverOutputChannelCount)
             </summary>
         </member>
         <member name="P:NAudio.Wave.AsioOut.NumberOfInputChannels">
             <summary>
             The number of input channels we are currently recording from
+            (Must be less than or equal to DriverInputChannelCount)
+            </summary>
+        </member>
+        <member name="P:NAudio.Wave.AsioOut.DriverInputChannelCount">
+            <summary>
+            The maximum number of input channels this ASIO driver supports
+            </summary>
+        </member>
+        <member name="P:NAudio.Wave.AsioOut.DriverOutputChannelCount">
+            <summary>
+            The maximum number of output channels this ASIO driver supports
             </summary>
         </member>
         <member name="P:NAudio.Wave.AsioOut.ChannelOffset">
@@ -11664,47 +11821,6 @@
             Allows adjusting the volume, 1.0f = full volume
             </summary>
         </member>
-        <member name="T:NAudio.Wave.SampleProviders.SampleProviderConverterBase">
-            <summary>
-            Helper base class for classes converting to ISampleProvider
-            </summary>
-        </member>
-        <member name="F:NAudio.Wave.SampleProviders.SampleProviderConverterBase.source">
-            <summary>
-            Source Wave Provider
-            </summary>
-        </member>
-        <member name="F:NAudio.Wave.SampleProviders.SampleProviderConverterBase.sourceBuffer">
-            <summary>
-            Source buffer (to avoid constantly creating small buffers during playback)
-            </summary>
-        </member>
-        <member name="M:NAudio.Wave.SampleProviders.SampleProviderConverterBase.#ctor(NAudio.Wave.IWaveProvider)">
-            <summary>
-            Initialises a new instance of SampleProviderConverterBase
-            </summary>
-            <param name="source">Source Wave provider</param>
-        </member>
-        <member name="M:NAudio.Wave.SampleProviders.SampleProviderConverterBase.Read(System.Single[],System.Int32,System.Int32)">
-            <summary>
-            Reads samples from the source wave provider
-            </summary>
-            <param name="buffer">Sample buffer</param>
-            <param name="offset">Offset into sample buffer</param>
-            <param name="count">Number of samples required</param>
-            <returns>Number of samples read</returns>
-        </member>
-        <member name="M:NAudio.Wave.SampleProviders.SampleProviderConverterBase.EnsureSourceBuffer(System.Int32)">
-            <summary>
-            Ensure the source buffer exists and is big enough
-            </summary>
-            <param name="sourceBytesRequired">Bytes required</param>
-        </member>
-        <member name="P:NAudio.Wave.SampleProviders.SampleProviderConverterBase.WaveFormat">
-            <summary>
-            Wave format of this wave provider
-            </summary>
-        </member>
         <member name="T:NAudio.Wave.SampleProviders.SampleToWaveProvider">
             <summary>
             Helper class for when you need to convert back to an IWaveProvider from
@@ -12311,7 +12427,7 @@
             <summary>Supports opening a AIF file</summary>
             <remarks>The AIF is of similar nastiness to the WAV format.
             This supports basic reading of uncompressed PCM AIF files,
-            with 16, 24 and 32 bit PCM data.
+            with 8, 16, 24 and 32 bit PCM data.
             </remarks>
         </member>
         <member name="M:NAudio.Wave.AiffFileReader.#ctor(System.IO.Stream)">
@@ -12367,17 +12483,17 @@
             AIFF Chunk
             </summary>
         </member>
-        <member name="F:NAudio.Wave.AiffFileReader.AiffChunk.chunkName">
+        <member name="F:NAudio.Wave.AiffFileReader.AiffChunk.ChunkName">
             <summary>
             Chunk Name
             </summary>
         </member>
-        <member name="F:NAudio.Wave.AiffFileReader.AiffChunk.chunkLength">
+        <member name="F:NAudio.Wave.AiffFileReader.AiffChunk.ChunkLength">
             <summary>
             Chunk Length
             </summary>
         </member>
-        <member name="F:NAudio.Wave.AiffFileReader.AiffChunk.chunkStart">
+        <member name="F:NAudio.Wave.AiffFileReader.AiffChunk.ChunkStart">
             <summary>
             Chunk start
             </summary>
@@ -12752,12 +12868,32 @@
         <member name="M:NAudio.Wave.Mp3FileReader.#ctor(System.String)">
             <summary>Supports opening a MP3 file</summary>
         </member>
+        <member name="M:NAudio.Wave.Mp3FileReader.#ctor(System.String,NAudio.Wave.Mp3FileReader.FrameDecompressorBuilder)">
+            <summary>Supports opening a MP3 file</summary>
+            <param name="mp3FileName">MP3 File name</param>
+            <param name="frameDecompressorBuilder">Factory method to build a frame decompressor</param>
+        </member>
         <member name="M:NAudio.Wave.Mp3FileReader.#ctor(System.IO.Stream)">
             <summary>
             Opens MP3 from a stream rather than a file
             Will not dispose of this stream itself
             </summary>
-            <param name="inputStream"></param>
+            <param name="inputStream">The incoming stream containing MP3 data</param>
+        </member>
+        <member name="M:NAudio.Wave.Mp3FileReader.#ctor(System.IO.Stream,NAudio.Wave.Mp3FileReader.FrameDecompressorBuilder)">
+            <summary>
+            Opens MP3 from a stream rather than a file
+            Will not dispose of this stream itself
+            </summary>
+            <param name="inputStream">The incoming stream containing MP3 data</param>
+            <param name="frameDecompressorBuilder">Factory method to build a frame decompressor</param>
+        </member>
+        <member name="M:NAudio.Wave.Mp3FileReader.CreateAcmFrameDecompressor(NAudio.Wave.WaveFormat)">
+            <summary>
+            Creates an ACM MP3 Frame decompressor. This is the default with NAudio
+            </summary>
+            <param name="mp3Format">A WaveFormat object based </param>
+            <returns></returns>
         </member>
         <member name="M:NAudio.Wave.Mp3FileReader.TotalSeconds">
             <summary>
@@ -12822,6 +12958,13 @@
             <summary>
             Xing header if present
             </summary>
+        </member>
+        <member name="T:NAudio.Wave.Mp3FileReader.FrameDecompressorBuilder">
+            <summary>
+            Function that can create an MP3 Frame decompressor
+            </summary>
+            <param name="mp3Format">A WaveFormat object describing the MP3 file format</param>
+            <returns>An MP3 Frame decompressor</returns>
         </member>
         <member name="T:NAudio.Wave.SampleProviders.Pcm16BitToSampleProvider">
             <summary>
@@ -13373,6 +13516,11 @@
         <member name="P:NAudio.Wave.WaveInBuffer.Done">
             <summary>
             Indicates whether the Done flag is set on this buffer
+            </summary>
+        </member>
+        <member name="P:NAudio.Wave.WaveInBuffer.InQueue">
+            <summary>
+            Indicates whether the InQueue flag is set on this buffer
             </summary>
         </member>
         <member name="P:NAudio.Wave.WaveInBuffer.BytesRecorded">

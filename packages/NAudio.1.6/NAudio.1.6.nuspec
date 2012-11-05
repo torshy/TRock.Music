@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
-<package xmlns="http://schemas.microsoft.com/packaging/2011/10/nuspec.xsd">
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
   <metadata>
     <id>NAudio</id>
-    <version>1.5.5-beta</version>
+    <version>1.6</version>
     <authors>Mark Heath</authors>
     <owners>Mark Heath</owners>
     <licenseUrl>http://naudio.codeplex.com/license</licenseUrl>

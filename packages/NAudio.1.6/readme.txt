@@ -17,12 +17,14 @@ biermeester
 ChunkWare Music Software
 CKing
 DaMacc
+eejake52
 Giawa
 Hfuy
 Idael Cardaso 
 jbaker8935
 jonahoffmann
 Lustild
+ManuN
 Michael Feld 
 Michael J
 Nikolaos Georgiou
@@ -30,12 +32,15 @@ Pygmy
 Ray Molenkamp
 Robert Bristow-Johnson
 Scott Fleischman 
+Sirish Bajpai
 Steve Underwood
 Ted Murphy
 Thefiloe
+Tiny Simple Tools
 Tobias Fleming
 Tony Cabello
 topher3683
 Ville Koskinen
+Wyatt Rice
 Yuval Naveh
 Zsb

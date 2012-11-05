@@ -36,9 +36,9 @@
     <Reference Include="Mp3Header">
       <HintPath>..\..\lib\Grooveshark\Mp3Header.dll</HintPath>
     </Reference>
-    <Reference Include="NAudio, Version=1.5.9.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="NAudio, Version=1.6.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\packages\NAudio.1.5.5-beta\lib\net20\NAudio.dll</HintPath>
+      <HintPath>..\..\packages\NAudio.1.6\lib\net20\NAudio.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=4.5.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
