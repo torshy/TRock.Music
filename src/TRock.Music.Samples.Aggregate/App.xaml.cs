@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.IO;
 using System.Windows;
 using Microsoft.Practices.Unity;
@@ -39,9 +40,17 @@ namespace TRock.Music.Samples.Aggregate
             // Aggregate provider that combines Grooveshark and Spotify players and providers
             container.RegisterType<ISongProvider, AggregateSongProvider>(new InjectionFactory(c =>
             {
-                return new AggregateSongProvider(
+                var a = new AggregateSongProvider(
                     c.Resolve<ISongProvider>(GroovesharkSongProvider.ProviderName),
                     c.Resolve<ISongProvider>(SpotifySongProvider.ProviderName));
+                
+                a.UnhandledException += (sender, args) =>
+                {
+                    Trace.WriteLine(args.Exception);
+                    args.Handled = true;
+                };
+
+                return a;
             }));
             container.RegisterType<ISongPlayer, AggregateSongPlayer>(new InjectionFactory(c =>
             {

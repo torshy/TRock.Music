@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -27,6 +28,12 @@ namespace TRock.Music
 
         #endregion Constructors
 
+        #region Events
+
+        public event EventHandler<UnhandledExceptionEventArgs> UnhandledException;
+
+        #endregion Events
+
         #region Properties
 
         public string Name
@@ -41,12 +48,6 @@ namespace TRock.Music
         {
             get;
             private set;
-        }
-
-        public bool HandleExceptions
-        {
-            get; 
-            set;
         }
 
         #endregion Properties
@@ -71,9 +72,12 @@ namespace TRock.Music
                             songs.AddRange(result);
                         }
                     }
-                    catch(Exception)
+                    catch(Exception e)
                     {
-                        if (!HandleExceptions)
+                        var args = new UnhandledExceptionEventArgs(e);
+                        OnUnhandledException(args);
+
+                        if (!args.Handled)
                         {
                             throw;
                         }
@@ -116,9 +120,12 @@ namespace TRock.Music
                             result = album;
                         }
                     }
-                    catch (Exception)
+                    catch (Exception e)
                     {
-                        if (!HandleExceptions)
+                        var args = new UnhandledExceptionEventArgs(e);
+                        OnUnhandledException(args);
+
+                        if (!args.Handled)
                         {
                             throw;
                         }
@@ -146,9 +153,12 @@ namespace TRock.Music
                             result = artist;
                         }
                     }
-                    catch (Exception)
+                    catch (Exception e)
                     {
-                        if (!HandleExceptions)
+                        var args = new UnhandledExceptionEventArgs(e);
+                        OnUnhandledException(args);
+
+                        if (!args.Handled)
                         {
                             throw;
                         }
@@ -159,6 +169,34 @@ namespace TRock.Music
             }, cancellationToken);
         }
 
+        protected void OnUnhandledException(UnhandledExceptionEventArgs e)
+        {
+            EventHandler<UnhandledExceptionEventArgs> handler = UnhandledException;
+            if (handler != null) handler(this, e);
+        }
+
         #endregion Methods
+    }
+
+    public class UnhandledExceptionEventArgs : HandledEventArgs
+    {
+        #region Constructors
+
+        public UnhandledExceptionEventArgs(Exception exception)
+        {
+            Exception = exception;
+        }
+
+        #endregion Constructors
+
+        #region Properties
+
+        public Exception Exception
+        {
+            get;
+            private set;
+        }
+
+        #endregion Properties
     }
 }
