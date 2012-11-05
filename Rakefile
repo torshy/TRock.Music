@@ -1,6 +1,6 @@
 require 'albacore'
 
-task :default => :go do
+task :default => :output do
 end
 
 desc "Assembly info generator"
@@ -30,22 +30,23 @@ output :output => :merge do |out|
   out.from '.'
   out.to 'out'
   out.file 'src\TRock.Music\bin\Release\TRock.Music.dll', :as=>'TRock.Music.dll'  
-  out.file 'src\TRock.Music.Grooveshark\bin\TRock.Music.Grooveshark.dll', :as=>'TRock.Music.Grooveshark.dll'
-  out.file 'src\TRock.Music.Spotify\bin\Release\TRock.Music.Spotify.dll', :as=>'TRock.Music.Spotify.dll'
-  out.file 'src\TRock.Music.Torshify\bin\Release\TRock.Music.Torshify.dll', :as=>'TRock.Music.Torshify.dll'  
-  out.file 'src\TRock.Music.Reactive\bin\Release\TRock.Music.Reactive.dll', :as=>'TRock.Music.Reactive.dll' 
-end
-
-output :serveroutput => :output do |out|
-  out.from 'src/TRock.Music.Torshify.Server/bin/Release'
-  out.to 'src/TRock.Music.Torshify.Server/bin/tmp'
-  out.file 'TRock.Music.dll', :as=>'TRock.Music.dll' 
-  out.file 'libspotify.dll', :as=>'libspotify.dll' 
-  out.file 'TRock.Music.Torshify.Server.exe', :as=>'TRock.Music.Torshify.Server.exe' 
-end
-
-zip :go => :serveroutput do | zip |
-    zip.directories_to_zip "src/TRock.Music.Torshify.Server/bin/tmp"
-    zip.output_file = "TRock.Music.Torshify.Server.zip"
-    zip.output_path = "out"
+  
+  out.file 'src\TRock.Music.Grooveshark\bin\TRock.Music.Grooveshark.dll', :as=>'Grooveshark\TRock.Music.Grooveshark.dll'
+  out.file 'packages\Newtonsoft.Json.4.5.10\lib\net40\Newtonsoft.Json.dll', :as=>'Grooveshark\Newtonsoft.Json.dll' 
+  
+  out.file 'src\TRock.Music.Spotify\bin\Release\TRock.Music.Spotify.dll', :as=>'Spotify\TRock.Music.Spotify.dll'
+  out.file 'src\TRock.Music.Torshify\bin\Release\TRock.Music.Torshify.dll', :as=>'Spotify\TRock.Music.Torshify.dll'    
+  out.file 'packages\Newtonsoft.Json.4.5.10\lib\net40\Newtonsoft.Json.dll', :as=>'Spotify\Newtonsoft.Json.dll'
+  out.file 'packages\Microsoft.Net.Http.2.0.20710.0\lib\net40\System.Net.Http.dll', :as=>'Spotify\System.Net.Http.dll'
+  out.file 'packages\SignalR.Client.0.5.3\lib\net40\SignalR.Client.dll', :as=>'Spotify\SignalR.Client.dll'
+  
+  out.file 'src\TRock.Music.Reactive\bin\Release\TRock.Music.Reactive.dll', :as=>'Reactive\TRock.Music.Reactive.dll' 
+  out.file 'packages\Rx-Core.2.0.20622-rc\lib\Net40\System.Reactive.Core.dll', :as=>'Reactive\System.Reactive.Core.dll'
+  out.file 'packages\Rx-Interfaces.2.0.20622-rc\lib\Net40\System.Reactive.Interfaces.dll', :as=>'Reactive\System.Reactive.Interfaces.dll'
+  out.file 'packages\Rx-Linq.2.0.20622-rc\lib\Net40\System.Reactive.Linq.dll', :as=>'Reactive\System.Reactive.Linq.dll'
+  out.file 'packages\Rx-PlatformServices.2.0.20622-rc\lib\Net40\System.Reactive.PlatformServices.dll', :as=>'Reactive\System.Reactive.PlatformServices.dll'
+    
+  out.file 'src\TRock.Music.Torshify.Server\bin\Release\TRock.Music.Torshify.Server.exe', :as=>'SpotifyServer\TRock.Music.Torshify.Server.exe' 
+  out.file 'src\TRock.Music.Torshify.Server\bin\Release\TRock.Music.dll', :as=>'SpotifyServer\TRock.Music.dll' 
+  out.file 'src\TRock.Music.Torshify.Server\bin\Release\libspotify.dll', :as=>'SpotifyServer\libspotify.dll' 
 end

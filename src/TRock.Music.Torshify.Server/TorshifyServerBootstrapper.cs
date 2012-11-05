@@ -101,6 +101,7 @@ namespace TRock.Music.Torshify.Server
             if (string.IsNullOrEmpty(username) || string.IsNullOrEmpty(password))
             {
                 log.Info("Please specify both username and password. -u=userName -p=password");
+                Console.ReadLine();
                 Environment.Exit(-1);
             }
 
