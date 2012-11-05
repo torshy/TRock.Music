@@ -33,6 +33,7 @@ output :output => :merge do |out|
   
   out.file 'src\TRock.Music.Grooveshark\bin\TRock.Music.Grooveshark.dll', :as=>'Grooveshark\TRock.Music.Grooveshark.dll'
   out.file 'packages\Newtonsoft.Json.4.5.10\lib\net40\Newtonsoft.Json.dll', :as=>'Grooveshark\Newtonsoft.Json.dll' 
+  out.file 'packages\NAudio.1.5.5-beta\lib\net20\NAudio.dll', :as=>'Grooveshark\NAudio.dll' 
   
   out.file 'src\TRock.Music.Spotify\bin\Release\TRock.Music.Spotify.dll', :as=>'Spotify\TRock.Music.Spotify.dll'
   out.file 'src\TRock.Music.Torshify\bin\Release\TRock.Music.Torshify.dll', :as=>'Spotify\TRock.Music.Torshify.dll'    
