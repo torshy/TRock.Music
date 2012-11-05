@@ -1,6 +1,8 @@
-﻿using System.Diagnostics;
-using SignalR;
+﻿using SignalR;
 using SignalR.Hubs;
+
+using log4net;
+
 namespace TRock.Music.Torshify.Server.Hubs
 {
     public class TorshifyHub : Hub
@@ -8,6 +10,7 @@ namespace TRock.Music.Torshify.Server.Hubs
         #region Fields
 
         private readonly ISongPlayer _player;
+        private readonly ILog _log = LogManager.GetLogger("TorshifyHub");
 
         #endregion Fields
 
@@ -24,67 +27,67 @@ namespace TRock.Music.Torshify.Server.Hubs
 
         public Song GetCurrentSong()
         {
-            Trace.WriteLine("GetCurrentSong()");
+            _log.Debug("GetCurrentSong()");
             return _player.CurrentSong;
         }
 
         public void SetMuted(bool isMuted)
         {
-            Trace.WriteLine("SetMuted(" + isMuted + ")");
+            _log.Debug("SetMuted(" + isMuted + ")");
             _player.IsMuted = isMuted;
         }
 
         public bool GetMuted()
         {
-            Trace.WriteLine("GetMuted()");
+            _log.Debug("GetMuted()");
             return _player.IsMuted;
         }
 
         public void SetVolume(float volume)
         {
-            Trace.WriteLine("SetVolume(" + volume + ")");
+            _log.Debug("SetVolume(" + volume + ")");
             _player.Volume = volume;
         }
 
         public float GetVolume()
         {
-            Trace.WriteLine("GetVolume()");
+            _log.Debug("GetVolume()");
             return _player.Volume;
         }
 
         public bool GetIsPlaying()
         {
-            Trace.WriteLine("GetIsPlaying()");
+            _log.Debug("GetIsPlaying()");
             return _player.IsPlaying;
         }
 
         public void SetIsPlaying(bool isPlaying)
         {
-            Trace.WriteLine("SetIsPlaying(" + isPlaying + ")");
+            _log.Debug("SetIsPlaying(" + isPlaying + ")");
             _player.IsPlaying = isPlaying;
         }
 
         public void Start(Song song)
         {
-            Trace.WriteLine("Start(" + song.Name + ", " + song.Id + ")");
+            _log.Info("Start(" + song.Name + ", " + song.Id + ")");
             _player.Start(song);
         }
 
         public void Play()
         {
-            Trace.WriteLine("Play()");
+            _log.Info("Play()");
             _player.Play();
         }
 
         public void Pause()
         {
-            Trace.WriteLine("Pause()");
+            _log.Info("Pause()");
             _player.Pause();
         }
 
         public void Stop()
         {
-            Trace.WriteLine("Stop()");
+            _log.Info("Stop()");
             _player.Stop();
         }
 

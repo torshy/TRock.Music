@@ -36,8 +36,16 @@ output :output => :merge do |out|
   out.file 'src\TRock.Music.Reactive\bin\Release\TRock.Music.Reactive.dll', :as=>'TRock.Music.Reactive.dll' 
 end
 
-zip :go => :output do | zip |
-    zip.directories_to_zip "src/TRock.Music.Torshify.Server/bin/Release"
+output :serveroutput => :output do |out|
+  out.from 'src/TRock.Music.Torshify.Server/bin/Release'
+  out.to 'src/TRock.Music.Torshify.Server/bin/tmp'
+  out.file 'TRock.Music.dll', :as=>'TRock.Music.dll' 
+  out.file 'libspotify.dll', :as=>'libspotify.dll' 
+  out.file 'TRock.Music.Torshify.Server.exe', :as=>'TRock.Music.Torshify.Server.exe' 
+end
+
+zip :go => :serveroutput do | zip |
+    zip.directories_to_zip "src/TRock.Music.Torshify.Server/bin/tmp"
     zip.output_file = "TRock.Music.Torshify.Server.zip"
     zip.output_path = "out"
 end
