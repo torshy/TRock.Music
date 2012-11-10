@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Globalization;
 using System.Linq;
 using System.Threading;
 
@@ -26,6 +27,8 @@ namespace TRock.Music.EchoNest
         {
             Name = "Similar";
             Description = "Artists similar to " + artistName;
+            Variety = 0.5;
+            Adventurousness = 0.2;
 
             _songProvider = songProvider;
             _artistName = artistName;
@@ -54,6 +57,18 @@ namespace TRock.Music.EchoNest
             private set;
         }
 
+        public double Variety
+        {
+            get; 
+            set;
+        }
+
+        public double Adventurousness
+        {
+            get; 
+            set;
+        }
+
         #endregion Properties
 
         #region Methods
@@ -69,6 +84,8 @@ namespace TRock.Music.EchoNest
                     dynamic options = new DynamicDictionary();
                     options.artist = _artistName;
                     options.type = "artist-radio";
+                    options.variety = Convert.ToString(Variety, CultureInfo.InvariantCulture);
+                    options.adventurousness = Convert.ToString(Adventurousness, CultureInfo.InvariantCulture);
 
                     result = EchoNestHelpers.Playlist.Create(_echoNestApiKey, options);
 
