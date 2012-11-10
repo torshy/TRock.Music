@@ -49,34 +49,34 @@ namespace TRock.Music.Spotify
                 .GetAsync(new Uri("http://ws.spotify.com/search/1/track.json?q=" + query), cancellationToken)
                 .ContinueWith(requestTask =>
                 {
+                    var songs = new List<Song>();
                     var response = requestTask.Result;
                     response.EnsureSuccessStatusCode();
 
                     var content = response.Content.ReadAsStringAsync().Result;
                     var result = JsonConvert.DeserializeObject<dynamic>(content);
-                    var tracks = (IEnumerable<dynamic>)result["tracks"];
 
-                    var songs = new List<Song>();
+                    var tracks = (IEnumerable<dynamic>)(result["tracks"].HasValues ? result["tracks"] : new dynamic[0]);
+
                     foreach (dynamic song in tracks)
                     {
                         songs.Add(new Song
                         {
-                            Id = song["href"].Value,
-                            Name = song["name"].Value,
+                            Id = song["href"],
+                            Name = song["name"],
                             Provider = ProviderName,
-                            TotalSeconds = (int)song["length"].Value,
+                            TotalSeconds = (int)song["length"],
                             Album = new Album
                             {
-                                Id = song["album"]["href"].Value,
+                                Id = song["album"] != null ? song["album"]["href"] : null,
                                 Provider = ProviderName,
-                                Name = song["album"]["name"].Value,
-                                CoverArt =
-                                    _imageProvider.GetCoverArtUri(song["album"]["href"].Value) ?? string.Empty
+                                Name = song["album"] != null ? song["album"]["name"] : null,
+                                CoverArt = _imageProvider.GetCoverArtUri(Convert.ToString(song["album"] != null ? song["album"]["href"] : null)) ?? string.Empty
                             },
                             Artist = new Artist
                             {
-                                Id = song["artists"][0]["href"].Value,
-                                Name = song["artists"][0]["name"].Value
+                                Id = song["artists"].HasValues ? song["artists"][0]["href"] : null,
+                                Name = song["artists"].HasValues ? song["artists"][0]["name"] : null
                             }
                         });
                     }
@@ -98,15 +98,26 @@ namespace TRock.Music.Spotify
                     var result = JsonConvert.DeserializeObject<dynamic>(content);
 
                     var albums = new List<Album>();
-                    foreach (var item in result["artist"]["albums"])
+
+                    if (result["artist"] != null)
                     {
-                        albums.Add(new Album
+                        dynamic items = result["artist"]["albums"].HasValues ? result["artist"]["albums"] : new dynamic[0];
+
+                        foreach (var item in items)
                         {
-                            Id = item["album"]["href"].Value,
-                            Provider = ProviderName,
-                            Name = item["album"]["name"].Value,
-                            CoverArt = _imageProvider.GetCoverArtUri(item["album"]["href"].Value) ?? string.Empty
-                        });
+                            dynamic album = item["album"];
+
+                            if (album != null)
+                            {
+                                albums.Add(new Album
+                                {
+                                    Id = album["href"],
+                                    Provider = ProviderName,
+                                    Name = album["name"],
+                                    CoverArt = _imageProvider.GetCoverArtUri(Convert.ToString(album["href"] ?? string.Empty)) ?? string.Empty
+                                });
+                            }
+                        }
                     }
 
                     return (IEnumerable<Album>)albums;
@@ -183,10 +194,10 @@ namespace TRock.Music.Spotify
                     response.EnsureSuccessStatusCode();
                     var content = response.Content.ReadAsStringAsync().Result;
                     var result = JsonConvert.DeserializeObject<dynamic>(content);
-                    
+
                     return new Artist
                     {
-                        Id = artistId, 
+                        Id = artistId,
                         Name = result["artist"]["name"].Value
                     };
                 });

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Threading.Tasks;
 
 using SignalR.Client;
@@ -73,14 +74,33 @@ namespace TRock.Music.Torshify
             {
                 if (IsConnected)
                 {
-                    return _proxy.Invoke<bool>("GetMuted").Result;
+                    return _proxy
+                        .Invoke<bool>("GetMuted")
+                        .ContinueWith(t =>
+                        {
+                            if (t.Exception != null)
+                            {
+                                Trace.WriteLine(t.Exception);
+                                return false;
+                            }
+
+                            return t.Result;
+                        }).Result;
                 }
 
                 return false;
             }
             set
             {
-                _proxy.Invoke("SetMuted", value);
+                _proxy
+                    .Invoke("SetMuted", value)
+                    .ContinueWith(t =>
+                    {
+                        if (t.Exception != null)
+                        {
+                            Trace.WriteLine(t.Exception);
+                        }
+                    });
             }
         }
 
@@ -90,14 +110,33 @@ namespace TRock.Music.Torshify
             {
                 if (IsConnected)
                 {
-                    return _proxy.Invoke<bool>("GetIsPlaying").Result;
+                    return _proxy
+                        .Invoke<bool>("GetIsPlaying")
+                        .ContinueWith(t =>
+                        {
+                            if (t.Exception != null)
+                            {
+                                Trace.WriteLine(t.Exception);
+                                return false;
+                            }
+
+                            return t.Result;
+                        }).Result;
                 }
 
                 return false;
             }
             set
             {
-                _proxy.Invoke("SetIsPlaying", value);
+                _proxy
+                    .Invoke("SetIsPlaying", value)
+                    .ContinueWith(t =>
+                    {
+                        if (t.Exception != null)
+                        {
+                            Trace.WriteLine(t.Exception);
+                        }
+                    });
             }
         }
 
@@ -111,7 +150,7 @@ namespace TRock.Music.Torshify
                     {
                         if (task.Exception != null)
                         {
-                            Console.WriteLine("Unable to get volume. " + task.Exception);
+                            Trace.WriteLine("Unable to get volume. " + task.Exception);
 
                             return 0;
                         }
@@ -124,7 +163,15 @@ namespace TRock.Music.Torshify
             }
             set
             {
-                _proxy.Invoke("SetVolume", value);
+                _proxy
+                    .Invoke("SetVolume", value)
+                    .ContinueWith(t =>
+                    {
+                        if (t.Exception != null)
+                        {
+                            Trace.WriteLine(t.Exception);
+                        }
+                    });
             }
         }
 
@@ -134,7 +181,18 @@ namespace TRock.Music.Torshify
             {
                 if (IsConnected)
                 {
-                    return _proxy.Invoke<Song>("GetCurrentSong").Result;
+                    return _proxy
+                        .Invoke<Song>("GetCurrentSong")
+                        .ContinueWith(t =>
+                        {
+                            if (t.Exception != null)
+                            {
+                                Trace.WriteLine(t.Exception);
+                                return null;
+                            }
+
+                            return t.Result;
+                        }).Result;
                 }
 
                 return null;
@@ -164,7 +222,14 @@ namespace TRock.Music.Torshify
         {
             if (IsConnected)
             {
-                _proxy.Invoke("Start", song);
+                _proxy.Invoke("Start", song)
+                    .ContinueWith(t =>
+                    {
+                        if (t.Exception != null)
+                        {
+                            Trace.WriteLine(t.Exception);
+                        }
+                    });
             }
         }
 
@@ -172,7 +237,15 @@ namespace TRock.Music.Torshify
         {
             if (IsConnected)
             {
-                _proxy.Invoke("Play");
+                _proxy
+                    .Invoke("Play")
+                    .ContinueWith(t =>
+                    {
+                        if (t.Exception != null)
+                        {
+                            Trace.WriteLine(t.Exception);
+                        }
+                    });
             }
         }
 
@@ -180,7 +253,15 @@ namespace TRock.Music.Torshify
         {
             if (IsConnected)
             {
-                _proxy.Invoke("Stop");
+                _proxy
+                    .Invoke("Stop")
+                    .ContinueWith(t=>
+                    {
+                        if (t.Exception != null)
+                        {
+                            Trace.WriteLine(t.Exception);
+                        }
+                    });
             }
         }
 
@@ -188,7 +269,15 @@ namespace TRock.Music.Torshify
         {
             if (IsConnected)
             {
-                _proxy.Invoke("Pause");
+                _proxy
+                    .Invoke("Pause")
+                    .ContinueWith(t =>
+                    {
+                        if (t.Exception != null)
+                        {
+                            Trace.WriteLine(t.Exception);
+                        }
+                    });
             }
         }
 
