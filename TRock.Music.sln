@@ -35,6 +35,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Samples", "Samples", "{DE4A
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TRock.Music.Samples.Aggregate", "src\TRock.Music.Samples.Aggregate\TRock.Music.Samples.Aggregate.csproj", "{AD18E1EA-74CC-4852-B342-610F1F87EA69}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TRock.Music.EchoNest", "src\TRock.Music.EchoNest\TRock.Music.EchoNest.csproj", "{249A2507-2D00-4F4F-AFA0-D6796551E7F9}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -129,6 +131,14 @@ Global
 		{AD18E1EA-74CC-4852-B342-610F1F87EA69}.Release|Any CPU.Build.0 = Release|Any CPU
 		{AD18E1EA-74CC-4852-B342-610F1F87EA69}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{AD18E1EA-74CC-4852-B342-610F1F87EA69}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{249A2507-2D00-4F4F-AFA0-D6796551E7F9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{249A2507-2D00-4F4F-AFA0-D6796551E7F9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{249A2507-2D00-4F4F-AFA0-D6796551E7F9}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{249A2507-2D00-4F4F-AFA0-D6796551E7F9}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{249A2507-2D00-4F4F-AFA0-D6796551E7F9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{249A2507-2D00-4F4F-AFA0-D6796551E7F9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{249A2507-2D00-4F4F-AFA0-D6796551E7F9}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{249A2507-2D00-4F4F-AFA0-D6796551E7F9}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

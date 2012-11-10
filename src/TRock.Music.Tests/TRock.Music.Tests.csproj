@@ -55,6 +55,7 @@
     <Compile Include="AggregateSongProviderTest.cs" />
     <Compile Include="GroovesharkSongProviderTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SimilarArtistsStreamTest.cs" />
     <Compile Include="SongStreamTest.cs" />
     <Compile Include="SpotifySongProviderTest.cs" />
     <Compile Include="VoteableQueueTest.cs" />
@@ -63,6 +64,10 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\TRock.Music.EchoNest\TRock.Music.EchoNest.csproj">
+      <Project>{249a2507-2d00-4f4f-afa0-d6796551e7f9}</Project>
+      <Name>TRock.Music.EchoNest</Name>
+    </ProjectReference>
     <ProjectReference Include="..\TRock.Music.Grooveshark\TRock.Music.Grooveshark.csproj">
       <Project>{2DCB6DE5-F15C-4382-9B97-252C26D1F027}</Project>
       <Name>TRock.Music.Grooveshark</Name>
