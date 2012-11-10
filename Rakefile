@@ -41,6 +41,10 @@ output :output => :merge do |out|
   out.file 'packages\Microsoft.Net.Http.2.0.20710.0\lib\net40\System.Net.Http.dll', :as=>'Spotify\System.Net.Http.dll'
   out.file 'packages\SignalR.Client.0.5.3\lib\net40\SignalR.Client.dll', :as=>'Spotify\SignalR.Client.dll'
   
+  out.file 'src\TRock.Music.EchoNest\bin\Release\TRock.Music.EchoNest.dll', :as=>'EchoNest\TRock.Music.EchoNest.dll'    
+  out.file 'packages\Newtonsoft.Json.4.5.10\lib\net40\Newtonsoft.Json.dll', :as=>'EchoNest\Newtonsoft.Json.dll'
+  out.file 'packages\Microsoft.Net.Http.2.0.20710.0\lib\net40\System.Net.Http.dll', :as=>'EchoNest\System.Net.Http.dll'
+  
   out.file 'src\TRock.Music.Reactive\bin\Release\TRock.Music.Reactive.dll', :as=>'Reactive\TRock.Music.Reactive.dll' 
   out.file 'packages\Rx-Core.2.0.20622-rc\lib\Net40\System.Reactive.Core.dll', :as=>'Reactive\System.Reactive.Core.dll'
   out.file 'packages\Rx-Interfaces.2.0.20622-rc\lib\Net40\System.Reactive.Interfaces.dll', :as=>'Reactive\System.Reactive.Interfaces.dll'
