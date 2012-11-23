@@ -68,8 +68,7 @@
     <Reference Include="System.Core" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="Torshify">
-      <HintPath>..\..\..\TRock\lib\Torshify\Torshify.dll</HintPath>
-      <Private>False</Private>
+      <HintPath>..\..\lib\Torshify\Torshify.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
