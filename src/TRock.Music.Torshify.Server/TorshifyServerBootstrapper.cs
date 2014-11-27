@@ -139,8 +139,10 @@ namespace TRock.Music.Torshify.Server
                 player.VolumeChanged += (sender, eventArgs) => hub.Clients.VolumeChanged(eventArgs);
 
                 var bootstrapper = new NancyBootstrapper(session);
+                var config = new HostConfiguration();
+                config.UrlReservations.CreateAutomatically = true;
 
-                var nancyHost = new NancyHost(new Uri(nancyFxUrl), bootstrapper);
+                var nancyHost = new NancyHost(new Uri(nancyFxUrl), bootstrapper, config);
                 nancyHost.Start();
             }
             catch (Exception e)

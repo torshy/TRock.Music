@@ -1,5 +1,4 @@
 ﻿using System.Windows.Input;
-using Microsoft.Practices.Prism;
 using Microsoft.Practices.Prism.Commands;
 using Microsoft.Practices.Prism.Regions;
 using Microsoft.Practices.Prism.ViewModel;
@@ -52,7 +51,7 @@ namespace TRock.Music.Client
         {
             UriQuery q = new UriQuery();
             q.Add("Query", query);
-            _navigationService.RequestNavigate(typeof(SearchResultsView).Name + q);
+            _navigationService.RequestNavigate(typeof(SearchResultsView).Name + "?" + q);
         }
 
         #endregion Methods

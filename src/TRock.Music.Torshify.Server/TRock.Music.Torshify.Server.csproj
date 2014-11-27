@@ -34,23 +34,21 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="log4net">
-      <HintPath>..\..\packages\log4net.2.0.0\lib\net40-full\log4net.dll</HintPath>
-      <Private>False</Private>
+      <HintPath>..\..\packages\log4net.2.0.3\lib\net40-full\log4net.dll</HintPath>
     </Reference>
     <Reference Include="Nancy">
-      <HintPath>..\..\packages\Nancy.0.12.1\lib\net40\Nancy.dll</HintPath>
-      <Private>False</Private>
+      <HintPath>..\..\packages\Nancy.0.23.2\lib\net40\Nancy.dll</HintPath>
     </Reference>
     <Reference Include="Nancy.Hosting.Self">
-      <HintPath>..\..\packages\Nancy.Hosting.Self.0.12.1\lib\net40\Nancy.Hosting.Self.dll</HintPath>
-      <Private>False</Private>
+      <HintPath>..\..\packages\Nancy.Hosting.Self.0.23.2\lib\net40\Nancy.Hosting.Self.dll</HintPath>
     </Reference>
-    <Reference Include="NAudio">
-      <HintPath>..\..\packages\NAudio.1.6\lib\net20\NAudio.dll</HintPath>
+    <Reference Include="NAudio, Version=1.7.2.19, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\NAudio.1.7.2\lib\net35\NAudio.dll</HintPath>
     </Reference>
-    <Reference Include="Newtonsoft.Json">
-      <HintPath>..\..\packages\Newtonsoft.Json.4.5.10\lib\net40\Newtonsoft.Json.dll</HintPath>
-      <Private>False</Private>
+    <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\Newtonsoft.Json.6.0.6\lib\net40\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="SignalR">
       <HintPath>..\..\packages\SignalR.Server.0.5.3\lib\net40\SignalR.dll</HintPath>
@@ -109,22 +107,22 @@
     <EmbeddedResource Include="cover.jpg" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="..\..\packages\log4net.2.0.0\lib\net40-full\log4net.dll">
+    <EmbeddedResource Include="..\..\packages\log4net.2.0.3\lib\net40-full\log4net.dll">
       <Link>Libs\log4net.dll</Link>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="..\..\packages\Nancy.0.12.1\lib\net40\Nancy.dll">
+    <EmbeddedResource Include="..\..\packages\Nancy.0.23.2\lib\net40\Nancy.dll">
       <Link>Libs\Nancy.dll</Link>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="..\..\packages\Nancy.Hosting.Self.0.12.1\lib\net40\Nancy.Hosting.Self.dll">
+    <EmbeddedResource Include="..\..\packages\Nancy.Hosting.Self.0.23.2\lib\net40\Nancy.Hosting.Self.dll">
       <Link>Libs\Nancy.Hosting.Self.dll</Link>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="..\..\packages\Newtonsoft.Json.4.5.10\lib\net40\Newtonsoft.Json.dll">
+    <EmbeddedResource Include="..\..\packages\Newtonsoft.Json.6.0.6\lib\net40\Newtonsoft.Json.dll">
       <Link>Libs\Newtonsoft.Json.dll</Link>
     </EmbeddedResource>
   </ItemGroup>
@@ -149,7 +147,7 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="..\..\packages\NAudio.1.6\lib\net20\NAudio.dll">
+    <EmbeddedResource Include="..\..\packages\NAudio.1.7.2\lib\net35\NAudio.dll">
       <Link>Libs\NAudio.dll</Link>
     </EmbeddedResource>
   </ItemGroup>

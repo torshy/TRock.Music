@@ -2,7 +2,6 @@ using System.Collections;
 using System.Linq;
 using System.Threading;
 
-using Microsoft.Expression.Interactivity.Core;
 using Microsoft.Practices.Prism.Commands;
 using Microsoft.Practices.Prism.Modularity;
 using Microsoft.Practices.Prism.Regions;
@@ -49,8 +48,8 @@ namespace TRock.Music.Client
             _regionManager.RequestNavigate("MainRegion", typeof(SearchView).Name);
 
             AppCommands.NavigateBackCommand.RegisterCommand(new DelegateCommand(ExecuteNavigateBack));
-            AppCommands.PlayCommand.RegisterCommand(new ActionCommand(ExecutePlay));
-            AppCommands.NextCommand.RegisterCommand(new ActionCommand(ExecuteNext));
+            AppCommands.PlayCommand.RegisterCommand(new DelegateCommand<object>(ExecutePlay));
+            AppCommands.NextCommand.RegisterCommand(new DelegateCommand<object>(ExecuteNext));
         }
 
         private void SongPlayerOnCurrentSongCompleted(object sender, SongEventArgs songEventArgs)

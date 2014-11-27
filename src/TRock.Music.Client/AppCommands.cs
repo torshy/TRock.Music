@@ -10,7 +10,6 @@ namespace TRock.Music.Client
         public static CompositeCommand VolumeUpCommand = new CompositeCommand();
         public static CompositeCommand VolumeDownCommand = new CompositeCommand();
         public static CompositeCommand EnqueueCommand = new CompositeCommand();
-        
         public static CompositeCommand NavigateBackCommand = new CompositeCommand();
     }
 }

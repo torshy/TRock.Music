@@ -90,7 +90,7 @@ namespace TRock.Music.Client
 
         void INavigationAware.OnNavigatedTo(NavigationContext navigationContext)
         {
-            var query = navigationContext.Parameters["Query"];
+            var query = navigationContext.Parameters["Query"].ToString();
             var ui = TaskScheduler.FromCurrentSynchronizationContext();
 
             _songProvider

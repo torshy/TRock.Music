@@ -3,7 +3,6 @@ using System.Threading.Tasks;
 using System.Windows;
 
 using MahApps.Metro;
-using MahApps.Metro.Controls;
 using Microsoft.Practices.Prism.Logging;
 using Microsoft.Practices.Prism.Modularity;
 using Microsoft.Practices.Prism.UnityExtensions;
@@ -58,7 +57,6 @@ namespace TRock.Music.Client
             ThemeManager.ChangeTheme(Application.Current, ThemeManager.DefaultAccents.First(a => a.Name == "Orange"), Theme.Light);
 
             Window window = (Window)Shell;
-            WindowSettings.SetSave(window, true);
             Application.Current.MainWindow = window;
             Application.Current.MainWindow.Show();
         }

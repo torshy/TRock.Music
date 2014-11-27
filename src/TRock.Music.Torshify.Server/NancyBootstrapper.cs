@@ -1,4 +1,5 @@
 using Nancy;
+using Nancy.TinyIoc;
 
 using Torshify;
 
@@ -23,10 +24,10 @@ namespace TRock.Music.Torshify.Server
 
         #region Methods
 
-        protected override void ConfigureApplicationContainer(TinyIoC.TinyIoCContainer container)
+        protected override void ConfigureApplicationContainer(TinyIoCContainer container)
         {
             base.ConfigureApplicationContainer(container);
-
+            
             container.Register(_session);
         }
 
