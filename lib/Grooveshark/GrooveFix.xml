@@ -1,14 +1,14 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<GrooveFix version="20120320">
+<GrooveFix version="20130530">
   <htmlshark>
     <GrooveClient>htmlshark</GrooveClient>
-    <GrooveClientRevision>20120312</GrooveClientRevision>
-    <GrooveStaticRandomizer>:breakfastBurritos:</GrooveStaticRandomizer>
+    <GrooveClientRevision>20130520</GrooveClientRevision>
+    <GrooveStaticRandomizer>:nuggetsOfBaller:</GrooveStaticRandomizer>
   </htmlshark>
   <jsqueue>
     <GrooveClient>jsqueue</GrooveClient>
-    <GrooveClientRevision>20120312.02</GrooveClientRevision>
-    <GrooveStaticRandomizer>:closeButNoCigar:</GrooveStaticRandomizer>
+    <GrooveClientRevision>20130520</GrooveClientRevision>
+    <GrooveStaticRandomizer>:chickenFingers:</GrooveStaticRandomizer>
   </jsqueue>
   <mobileshark>
     <GrooveClient>mobileshark</GrooveClient>

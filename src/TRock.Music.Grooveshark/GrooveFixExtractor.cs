@@ -16,16 +16,13 @@ namespace TRock.Music.Grooveshark
             }
 
             var outputFile = Path.Combine(baseDirectory, filename);
-            if (!File.Exists(outputFile))
+            using (Stream s = Assembly.GetExecutingAssembly().GetManifestResourceStream(resourceName))
             {
-                using (Stream s = Assembly.GetExecutingAssembly().GetManifestResourceStream(resourceName))
+                using (FileStream fs = new FileStream(outputFile, FileMode.Create))
                 {
-                    using (FileStream fs = new FileStream(outputFile, FileMode.Create))
-                    {
-                        byte[] b = new byte[s.Length];
-                        s.Read(b, 0, b.Length);
-                        fs.Write(b, 0, b.Length);
-                    }
+                    byte[] b = new byte[s.Length];
+                    s.Read(b, 0, b.Length);
+                    fs.Write(b, 0, b.Length);
                 }
             }
         }
